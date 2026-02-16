@@ -1,0 +1,28 @@
+{
+    "cards": [
+        {"figura": "9", "kolor": "♠", "nazwa": "wino", "wartosc": 0},
+        {"figura": "9", "kolor": "♣", "nazwa": "zoladz", "wartosc": 0},
+        {"figura": "9", "kolor": "♦", "nazwa": "dzwonek", "wartosc": 0},
+        {"figura": "9", "kolor": "♥", "nazwa": "czerwo", "wartosc": 0},
+        {"figura": "10", "kolor": "♠", "nazwa": "wino", "wartosc": 10},
+        {"figura": "10", "kolor": "♣", "nazwa": "zoladz", "wartosc": 10},
+        {"figura": "10", "kolor": "♦", "nazwa": "dzwonek", "wartosc": 10},
+        {"figura": "10", "kolor": "♥", "nazwa": "czerwo", "wartosc": 10},
+        {"figura": "J", "kolor": "♠", "nazwa": "wino", "wartosc": 2},
+        {"figura": "J", "kolor": "♣", "nazwa": "zoladz", "wartosc": 2},
+        {"figura": "J", "kolor": "♦", "nazwa": "dzwonek", "wartosc": 2},
+        {"figura": "J", "kolor": "♥", "nazwa": "czerwo", "wartosc": 2},
+        {"figura": "Q", "kolor": "♠", "nazwa": "wino", "wartosc": 3},
+        {"figura": "Q", "kolor": "♣", "nazwa": "zoladz", "wartosc": 3},
+        {"figura": "Q", "kolor": "♦", "nazwa": "dzwonek", "wartosc": 3},
+        {"figura": "Q", "kolor": "♥", "nazwa": "czerwo", "wartosc": 3},
+        {"figura": "K", "kolor": "♠", "nazwa": "wino", "wartosc": 4},
+        {"figura": "K", "kolor": "♣", "nazwa": "zoladz", "wartosc": 4},
+        {"figura": "K", "kolor": "♦", "nazwa": "dzwonek", "wartosc": 4},
+        {"figura": "K", "kolor": "♥", "nazwa": "czerwo", "wartosc": 4},
+        {"figura": "A", "kolor": "♠", "nazwa": "wino", "wartosc": 11},
+        {"figura": "A", "kolor": "♣", "nazwa": "zoladz", "wartosc": 11},
+        {"figura": "A", "kolor": "♦", "nazwa": "dzwonek", "wartosc": 11},
+        {"figura": "A", "kolor": "♥", "nazwa": "czerwo", "wartosc": 11}
+    ]
+}
