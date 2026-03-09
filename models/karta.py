@@ -1,18 +1,18 @@
-class Karta():
-    def __init__(self,kolor="",figura="",wartosc="",nazwa=""):
-        self.kolor = kolor
-        self.figura = figura
-        self.wartosc = wartosc
-        self.kolor_slownie = ""
-        self.nazwa = self.figura + nazwa
+class Card():
+    def __init__(self, color="", figure="", value="", name=""):
+        self.color = color
+        self.figure = figure
+        self.value = value
+        self.color_text = ""
+        self.name = self.figure + name
 
     def __str__(self):
-        return self.nazwa
+        return self.name
     
-    def get_wartosc(self):
+    def get_value(self):
         """getter"""
-        return self.wartosc
+        return self.value
     
-    def set_wartosc(self,nowa):
+    def set_value(self, new_value):
         """setter"""
-        self.wartosc = nowa
+        self.value = new_value

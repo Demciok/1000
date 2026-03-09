@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 @dataclass
-class Tura:
-    """Klasa pomocnicza w rundzie"""
-    nr_tury: int
-    szychta: dict
-    klr: str
-    klr_meldunku: str
+class Turn:
+    """Helper class for a round"""
+    turn_number: int
+    shift: dict # szychta
+    color: str
+    marriage_color: str # kolor meldunku 

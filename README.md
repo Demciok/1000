@@ -80,8 +80,8 @@ gra-1000/
 
 ### Instalacja
 ```bash
-#git clone https://github.com/Demciok/tysiąc.git
-cd gra-1000
+#git clone https://github.com/Demciok/1000.git
+cd 1000
 pip install -r requirements.txt  
 ```
 

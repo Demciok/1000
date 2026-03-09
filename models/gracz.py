@@ -24,7 +24,7 @@ class Gracz():
 
     def policz_punkty_na_koniec_tury(self) -> int:
         """Zwraca sume zebranych punktów z kart i meldunku"""
-        suma =sum([karta.wartosc for szychta in self.wygrane_szychty for karta in szychta]) + self.punkty_meldunek 
+        suma = sum([karta.wartosc for szychta in self.wygrane_szychty for karta in szychta]) + self.punkty_meldunek 
         suma_zaokr = (suma + 5 ) // 10 * 10
         return suma_zaokr
 
