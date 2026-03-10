@@ -1,16 +1,15 @@
-from models.turn import Tura
+from models.turn import Turn
 import random
-from models.player import Gracz
-import sys
+from models.player import Player
 
 
-class Gra():
+class Game():
     def __init__(self,players= [],threecards= [],):
         self.threecards = threecards
         self.players = players
         self.round_number = 1
         self.starting_player= self.draw_player()
-        self.bidding_player = self.oblicz_licytatora()
+        self.bidding_player = self.calculate_bidding_player()
         self.start_trick = None
         self.active_marriage = None # marriage is a pair of King and Queen
         self.game_mode = True
@@ -45,7 +44,7 @@ class Gra():
     
     def bid_winner_takes_threecards(self,winner):
         """Powieksza reke playera o 3 karty """
-        winner.reka.extend(self.threecards)
+        winner.hand.extend(self.threecards)
 
     def show_threecards(self):
         """Odkrywa 3 karty na środku"""
@@ -57,28 +56,28 @@ class Gra():
         print("Zaczynamy licytacje")
         # dialogue(4)
         self.players[self.bidding_player].bidding_score = 100 # ustawia wartośc na 100
-        while(sum(player.bid for player in self.players) > 1):
+        while(sum(player.has_bid for player in self.players) > 1):
             for player in self.players:
                 if player.bidding_score == 100 and self.highest_bid() == 100:
                     continue
-                if not player.bid:
+                if not player.has_bid:
                     continue
-                if (player.licytuj(self.highest_bid())):
+                if (player.bid(self.highest_bid())):
                     player.bidding_score = self.highest_bid() + 10
                 else: 
-                    player.bid = False
+                    player.has_bid = False
         winner = self.calculate_starting_player()
         self.start_trick  = winner
         print(f"{"-"*50}\nGre rozpocznie {winner.name}, musi ugrać {self.highest_bid()} \n{"-"*50}")
         self.show_threecards()
         self.bid_winner_takes_threecards(winner)
-        winner.rozdaj_po_karcie(self.players,winner) # winner.rozdaj_po_karcie(self.players)
+        winner.deal_one_card_each(self.players,winner) # winner.rozdaj_po_karcie(self.players)
         print(f"{"-"*50}\n Zaczynamy grę \n{"-"*50}")
 
-    def trick_winner(self,turn: Tura) -> Gracz:
+    def trick_winner(self,turn: Turn) -> Player:
         """Zwraca playera który wygrywa szychte"""
         players_with_color = {
-        player: card for player, card in turn.szychta.items() 
+        player: card for player, card in turn.shift.items() 
         if card.color == turn.marriage_color
         }
         if not players_with_color:
@@ -89,26 +88,26 @@ class Gra():
     def round(self): # mozna rzucic marriage nie bedac pierwszy = blad ale te
         """Funkcja obsługująca runde """
         for player in self.players:
-            player.posiadane_karty()
+            player.show_cards_in_hand()
         print('Rozpoczynamy ture')
         marriage = None
         i = False # zmienna zeby zmieniac kolor meldunku za petla
         for i in range(8):
             n_turn = Turn(i+1,{},None,marriage)
             for j in range(3):
-                start_player = self.players[(j+self.players.index(self.start_ture )) % 3]
-                played_card, store_marriage = start_player.zagraj_karte(n_turn)
-                if store_marriage: marriage = played_card.kolor
-                if j == 0: n_turn.klr = played_card.kolor
+                start_player = self.players[(j+self.players.index(self.start_trick )) % 3]
+                played_card, store_marriage = start_player.play_card(n_turn)
+                if store_marriage: marriage = played_card.color
+                if j == 0: n_turn.color = played_card.color
                 n_turn.shift[start_player] = played_card
             trick_winner = self.trick_winner(n_turn)
             print(f"Ture wygrywa {trick_winner.name}")
-            trick_winner.wygrane_szychty.append([karta for karta in n_turn.szychta.values()])
+            trick_winner.winned_tricks.append([card for card in n_turn.shift.values()])
             self.start_ture  = trick_winner 
         for player in self.players: 
-            print("points", player.policz_points_na_koniec_tury())
-        self.zakoncz_runde()
-        self.pokaz_wyniki()
+            print("points", player.calculate_round_score())
+        self.end_round()
+        self.show_score()
 
     def check_winner(self):
         """Sprawdza czy ktoś już wygrał gre"""
@@ -118,20 +117,20 @@ class Gra():
         """Resetuje wszystkie zmienne by móc rozpocząć nową rundę"""
         self.round_number += 1 
         self.threecards = []
-        player_bid = self.oblicz_startującego()
+        player_bid = self.calculate_starting_player()
         for player in self.players:
             if player == player_bid: 
-                if player.policz_points_na_koniec_tury() < player.bidding_score:
+                if player.calculate_round_score() < player.bidding_score:
                     player.points -= player.bidding_score
                 else:
-                    player.points += player.policz_points_na_koniec_tury()
+                    player.points += player.calculate_round_score()
             else:
                 if player.points > 900: # to nie dodawaj punktow bo musi byc licytujacy 
                     pass
                 else:      
-                    player.points += player.policz_points_na_koniec_tury()
+                    player.points += player.calculate_round_score()
         for player in self.players:
-            player.zresetuj_reke()
+            player.reset_hand()
 
         if self.check_winner():
             print("koniec gry")

@@ -1,153 +1,155 @@
-from .gracz import Gracz
-from utils.pomocnicze import MELDUNKI
+from .player import Player
+from utils.auxiliary import MARRIAGE
 import random
 
 
-class Bot(Gracz): # funkcja dziala jak bot ma meldunki to zwraca wartość
-    def sprawdz_meldunki(self):
-        damy = {k.kolor_slownie for k in self.reka if k.figura == "Q"} # set()
-        krole = {k.kolor_slownie for k in self.reka if k.figura == "K"} # set()
-        posiadane_meldunki = damy & krole # część wspólna
-        if len(posiadane_meldunki) == 0:
+class Bot(Player): # funkcja dziala jak bot ma meldunki to zwraca wartość
+    def check_marriages(self):
+        queens = {k.color_text for k in self.hand if k.figure == "Q"} # set()
+        kings = {k.color_text for k in self.hand if k.figure == "K"} # set()
+        owned_marriages = queens & kings # część wspólna
+        if len(owned_marriages) == 0:
             return []
         else:
-            return posiadane_meldunki
+            return owned_marriages
 
-    def punkty_za_meldunek(self):
-        return sum([MELDUNKI[kolor_mel] for kolor_mel in self.sprawdz_meldunki()])
+    def add_marriages_points_end_round(self):
+        return sum([MARRIAGE[color_mar] for color_mar in self.check_marriages()])
     
-    def przelicz_reke(self):
-        return sum(karta.wartosc for karta in self.reka)
+    def calculate_hand(self):
+        return sum(card.value for card in self.hand)
     
-    def oblicz_max_licytacje(self):
-        wynik = 0
-        meldunki_punkty = self.punkty_za_meldunek()
-        wynik += meldunki_punkty
+    def calculate_max_bid(self):
+        score = 0
+        meldunki_punkty = self.add_marriages_points_end_round()
+        score += meldunki_punkty
 
-        for karta in self.reka:
-            if karta.wartosc == 11: # As
-                wynik += 15
-            elif karta.wartosc == 10: # 10
-                wynik += 10
-            elif karta.wartosc == 4: # Król
-                wynik += 4
+        for card in self.hand:
+            if card.value == 11: # As
+                score += 15
+            elif card.value == 10: # 10
+                score += 10
+            elif card.value == 4: # Król
+                score += 4
 
-        for kolor in ["wino", "zoladz", "dzwonek", "czerwo"]:
-            kart_w_kolorze = len(self.sprawdz_kolor(kolor))
-            if kart_w_kolorze >= 4:
+        for color in ["wino", "zoladz", "dzwonek", "czerwo"]:
+            card_in_color = len(self.check_color(color))
+            if card_in_color >= 4:
                 score += 20
         
-        max_lic = (wynik // 10 ) * 10
-        if meldunki_punkty == 0 and max_lic > 120:
-            max_lic = 120
+        max_bid = (score // 10 ) * 10
+        if meldunki_punkty == 0 and max_bid > 120:
+            max_bid = 120
         
-        return max_lic
+        return max_bid
     
-    def licytuj(self, aktualna_stawka): # pomyslec jeszcze nad tym 
-        punkty_meld = self.punkty_za_meldunek()
-        p_punkty = self.przelicz_reke() + punkty_meld
-        if aktualna_stawka < self.oblicz_max_licytacje() :
-            print(f"Bot: {self.imie} podbija stawke ! ")
+    def bid(self, current_rate): # pomyslec jeszcze nad tym 
+        if current_rate < self.calculate_max_bid() :
+            print(f"Bot: {self.name} podbija stawke ! ")
             return 1
         else:
-            print(f"Bot: {self.imie} konczy licytacje ")
+            print(f"Bot: {self.name} konczy licytacje ")
             return 0
 
-    def sprawdz_figure(self,figura):
-        return [e for e,karta in enumerate(self.reka) if karta.figura == figura]
+    def check_figure(self,figure):
+        return [e for e,card in enumerate(self.hand) 
+                if card.figure == figure]
     
-    def sprawdz_kolor(self,kolor):
-        return [karta for e,karta in enumerate(self.reka) if karta.kolor == kolor ]     
+    def check_color(self,color):
+        return [card for e,card in enumerate(self.hand) 
+                if card.color == color ]     
     
-    def zwroc_najmniejsza(self,kolor):
-        self.posortuj_po_wartosciach()
-        return [karta for karta in self.reka if karta.kolor == kolor ][-1]
+    def return_lowest_value(self,color):
+        self.sort_by_card_value()
+        return [card for card in self.hand 
+                if card.color == color ][-1]
     
-    def meldunek_w_kupce(self,t_parm):
-        return any([karta for karta in t_parm.szychta.values() if karta.kolor == t_parm.klr_meldunku])
+    def marriage_in_threecards(self,t_parm): # i forget what this functio does 
+        return any([karta for karta in t_parm.shift.values() 
+                    if karta.color == t_parm.marriage_color])
     
-    def sprawdz_szychte(self,t_parm): # tu zawsze nam zwraca karte ktora mamy zagrac
-        karty_w_kolorze = self.sprawdz_kolor(t_parm.klr)
-        if len(karty_w_kolorze) > 0:
-            if self.meldunek_w_kupce(t_parm):
-                return self.zwroc_najmniejsza(t_parm.klr)
+    def check_shift(self,t_parm): # tu zawsze nam zwraca karte ktora mamy zagrac
+        cards_in_color = self.check_color(t_parm.color)
+        if len(cards_in_color) > 0:
+            if self.marriage_in_threecards(t_parm):
+                return self.return_lowest_value(t_parm.color)
             c = []
-            if len(t_parm.szychta) == 2:
-                for sz_karta in t_parm.szychta.values():
-                    c.append([karta for karta in self.reka if sz_karta.wartosc < karta.wartosc])
-                jakas_zmienna = list(set(c[0])- set(c[1]))
-                if len(jakas_zmienna) > 0 and jakas_zmienna[0] != 0:
+            if len(t_parm.shift) == 2:
+                for sz_card in t_parm.shift.values():
+                    c.append([card for card in self.hand 
+                              if sz_card.value < card.value])
+                h_var = list(set(c[0])- set(c[1]))
+                if len(h_var) > 0 and h_var[0] != 0:
 
-                    return jakas_zmienna[0]
+                    return h_var[0]
                 else:
 
-                    return self.zwroc_najmniejsza(t_parm.klr)
+                    return self.return_lowest_value(t_parm.color)
             else:
-                karty_wieksze = [karta for karta in self.reka if list(t_parm.szychta.values())[0].wartosc < karta.wartosc]
-                if any(karty_wieksze):
-
-                    return karty_wieksze[0]
+                higher_cards = [card for card in self.hand 
+                                if list(t_parm.shift.values())[0].value < card.value]
+                if any(higher_cards):
+                    return higher_cards[0]
                 else:
-
-                    return self.zwroc_najmniejsza(t_parm.klr)
+                    return self.return_lowest_value(t_parm.color)
         else: # tu jest blad 
-            if t_parm.klr_meldunku == None:
-                self.posortuj_po_wartosciach()
-                return self.reka[-1]
+            if t_parm.marriage_color == None:
+                self.sort_by_card_value()
+                return self.hand[-1]
             else: # tu cos nie dziala 
-                self.posortuj_po_wartosciach()
-                karty = self.sprawdz_kolor(t_parm.klr_meldunku)
-                if len(karty) > 0:
+                self.sort_by_card_value()
+                cards = self.check_color(t_parm.marriage_color)
+                if len(cards) > 0:
 
-                    return karty[0]
+                    return cards[0]
                 else:
 
-                    return self.reka[-1]
+                    return self.hand[-1]
             
-    def karty_pokaz(self):
-        return [karta.nazwa for karta in self.reka]
-    def prosta_logika(self,tura_parms):
-        if len(tura_parms.szychta) == 0: # jezeli zaczyna ture rzuca najpierw wszystkie asy(bo wiadomo ze wygra) pozniej wszystkie meldunki, na koniec karte najwyzsza 
-            asy = self.sprawdz_figure("A")
-            karty_w_klr_meldunku = [e for e,karta in enumerate(self.reka) if karta.kolor_slownie == tura_parms.klr_meldunku]
-            meld = self.sprawdz_meldunki() # jak zaczyna to musi wyrzucić wszystkie asy
-            if len(asy) > 0:
-                return self.reka.pop(asy[0]) 
-            if len(meld) > 0: # szuka karty z figura dama i kolorem meldunku zwraca index a pozniej popuje i zwraca karte
-                return self.reka.pop([e for e,karta in enumerate(self.reka) if karta.kolor_slownie == list(meld)[0] and karta.figura == "Q"][0])
-            if len(karty_w_klr_meldunku) > 0:
-                return self.reka.pop(karty_w_klr_meldunku[0])
-            self.posortuj_po_wartosciach()
-            return self.reka.pop(0)
-        if len(tura_parms.szychta) == 1:
-            return self.reka.pop(self.reka.index(self.sprawdz_szychte(tura_parms)))
-        if len(tura_parms.szychta) == 2:
-            return self.reka.pop(self.reka.index(self.sprawdz_szychte(tura_parms)))
+    def show_cards(self):
+        return [card.name for card in self.hand]
+    def simple_logic(self,turn_parms):
+        if len(turn_parms.shift) == 0: # jezeli zaczyna ture rzuca najpierw wszystkie aces(bo wiadomo ze wygra) pozniej wszystkie meldunki, na koniec karte najwyzsza 
+            aces = self.check_figure("A")
+            cards_in_marriage_color = [e for e,card in enumerate(self.hand) if card.color_text == turn_parms.marriage_color]
+            meld = self.check_marriages() # jak zaczyna to musi wyrzucić wszystkie aces
+            if len(aces) > 0:
+                return self.hand.pop(aces[0]) 
+            if len(meld) > 0: # szuka cards z figure dama i kolorem meldunku zwraca index a pozniej popuje i zwraca karte
+                return self.hand.pop([e for e,card in enumerate(self.hand) if card.color_text == list(meld)[0] and card.figure == "Q"][0])
+            if len(cards_in_marriage_color) > 0:
+                return self.hand.pop(cards_in_marriage_color[0])
+            self.sort_by_card_value()
+            return self.hand.pop(0)
+        if len(turn_parms.shift) == 1:
+            return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
+        if len(turn_parms.shift) == 2:
+            return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
         
-    def zaawansowana_logika(self, tura_parms):
+    def advance_logic(self, turn_parms):
         pass # kiedys zrobie jakas lepsza    
         
-    def zagraj_karte(self, tura_parms):
-        k = self.prosta_logika(tura_parms)
-        print(f"{"-"*50}\n {self.imie} rzuca {k.nazwa} \n {"-"*50}")
-        d = self.dodaj_za_meldunek(k,tura_parms)
+    def play_card(self, turn_parms):
+        k = self.simple_logic(turn_parms)
+        print(f"{"-"*50}\n {self.name} rzuca {k.name} \n {"-"*50}")
+        d = self.add_points_for_marriage(k,turn_parms)
         return k,d
         
 
-    def rozdaj_po_karcie(self,gracze,wygrany):
+    def deal_one_card_each(self,players,winner):
         """Funkcja ktora byla poniewaz nie chcialo mi sie robic """
-        d = gracze 
-        d.remove(wygrany) 
+        d = players 
+        d.remove(winner) 
         for a in range(2): 
             if a == 0:
-                picked = random.choice(self.reka)
-                print(f"{self.imie} daje {picked} graczu {d[a].imie}")
-                d[a].reka.append(picked)
-                self.reka.remove(picked)
+                picked = random.choice(self.hand)
+                print(f"{self.name} daje {picked} graczu {d[a].name}")
+                d[a].hand.append(picked)
+                self.hand.remove(picked)
             else:
-                picked = random.choice(self.reka)
-                print(f"{self.imie} daje {picked} graczu {d[a].imie}")
-                d[a].reka.append(picked)
-                self.reka.remove(picked)
-        d.append(wygrany)
-        self.posortuj_po_wartosciach()
+                picked = random.choice(self.hand)
+                print(f"{self.name} daje {picked} graczu {d[a].name}")
+                d[a].hand.append(picked)
+                self.hand.remove(picked)
+        d.append(winner)
+        self.sort_by_card_value()

@@ -1,31 +1,31 @@
 from models.bot import Bot
-from models.gracz import Gracz
-from models.talia import Talia
-from game.gra import Gra
-from utils.pomocnicze import wybierz_tryb, nazwij_gracza
+from models.player import Player
+from models.deck import Deck
+from game.game import Game
+from utils.auxiliary import pick_game_mode, name_a_player
 
 def main():
-    if wybierz_tryb():
-        Gracz1 = Gracz("gracz1",0) # nazwij_gracz()
-        Gracz2 = Gracz("gracz2",0) # nazwij_gracz()
-        Gracz3 = Gracz("gracz3",0) # nazwij_gracz()
+    if pick_game_mode():
+        Player1 = Player("gracz1",0) # nazwij_gracz()
+        Player2 = Player("gracz2",0) # nazwij_gracz()
+        Player3 = Player("gracz3",0) # nazwij_gracz()
     else:
-        Gracz1 = Gracz("czlowiek",0) 
-        Gracz2 = Bot("LLama",0)
-        Gracz3 = Bot("Claude",0)
+        Player1 = Player("czlowiek",0) 
+        Player2 = Bot("LLama",0)
+        Player3 = Bot("Claude",0)
 
-    granie = Gra([Gracz1,Gracz2,Gracz3])
-    talia_kart = Talia()
-    talia_kart.stworz_talie()
+    gameplay = Game([Player1,Player2,Player3])
+    deck_of_cards = Deck()
+    deck_of_cards.create_deck()
      
-    granie.zaczynajacy_gre.potasuj_talie(talia_kart)
+    gameplay.starting_player.shuffle(deck_of_cards)
     while True:
-        talia_kart.rozdaj_karty(granie)
-        granie.licytacja()
-        granie.runda()
-        granie.zakoncz_runde()
-        granie.pokaz_wyniki()
-        granie.gracze[granie.zaczynajacy_licytacje].potasuj_talie(talia_kart)
+        deck_of_cards.deal_cards(gameplay)
+        gameplay.auction()
+        gameplay.round()
+        gameplay.end_round()
+        gameplay.show_score()
+        gameplay.players[gameplay.bidding_player].shuffle(deck_of_cards)
 
 
 if __name__ == "__main__":
