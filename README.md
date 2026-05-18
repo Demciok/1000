@@ -109,7 +109,7 @@ python main.py
 - [ ] Create graphical version of the game
 - [ ] Add save game state feature
 - [ ] Enable online multiplayer
-- [ ] Complete Polish version documentation
+- [X] Complete English version documentation
 
 ## Contributing
 
@@ -236,7 +236,7 @@ python main.py
 - [ ] Zrobić wersję graficzną gry
 - [ ] Dodać opcję zapisu stanu gry 
 - [ ] Umożliwić grę online multiplayer
-- [ ] Dokończyć angielską wersję dokumentacji
+- [X] Dokończyć angielską wersję dokumentacji
 
 ## Contributing
 

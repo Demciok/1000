@@ -1,7 +1,7 @@
 from colorama import Fore, Style, init
 from operator import attrgetter
 from utils.auxiliary import MARRIAGE
-import random
+
 init()
 
 class Player():
@@ -9,10 +9,26 @@ class Player():
         self.name = name
         self.points = points
         self.hand = []
-        self.bidding_score = 0
-        self.has_bid = True
-        self.winned_tricks = [] 
-        self.bid_points = 0
+        self.bidding_score = 0 # points in auction (start from 100) Who has the most points start the round 
+        self.has_bid = True # check if you are bidding in auction
+        self.winned_tricks = [] # cards that you win from the turn
+        self.bid_points = 0 # points for marriage 
+        self.have_bomb = True
+
+
+    @staticmethod # dekorator służący do rozdzielania poszczególnych tekstów zapytań 
+    def rozdziel(funkcja):
+
+        def wrapper(*args,**kwargs):
+            print(f"{"-"*50}")
+
+            wynik = funkcja(*args,**kwargs)
+
+            print(f"{"-"*50}")
+            return wynik
+        
+        return wrapper
+
 
     def reset_hand(self):
         """Resetuje klase gracze by zacząć nową runde"""
@@ -38,6 +54,7 @@ class Player():
         current_hand.sort(key=attrgetter("value"),reverse=True)
         self.hand = current_hand
 
+    @rozdziel
     def show_cards_in_hand(self):
         """Sortuje i wyświetla posiadane obecnie karty""" 
         self.sort_by_card_value()          # {" ".join(f"{k.name({self.hand.index(k)})})}
@@ -48,23 +65,28 @@ class Player():
         print(Fore.BLACK + f"Wina: {" | ".join([f"{k.name} ({self.hand.index(k)})" for k in self.hand if k.color_text == "wino"]) }" )
         print(Style.RESET_ALL, end="")
 
-    def postpone_deck(self,deck):
-        """Pozwala przełożyć karty graczowi"""
-        print("Wybierasz od góry jak przełożyć karty np. 10 przekladasz 10 górnych kart na dół(0-24): ")
-        choice = int(input(""))
-        while (choice not in [0,24]):
-            choice = int(input("Wybierz poprawny zakres"))
-        if (choice in [0,24]):
-            print("Nie przekladasz wiec grajmy")
-            return 
-        postpone_deck = deck.deck[choice:deck.size-1] + deck.deck[0:choice]
-        deck.deck = postpone_deck
+    def shuffle(self,deck):
+        """Shuffle a deck"""
+        deck.shuffle_deck()
+
+    # FUNKCJA NIEUZYWANA
+    # def postpone_deck(self,deck):
+    #     """Pozwala przełożyć karty graczowi"""
+    #     print("Wybierasz od góry jak przełożyć karty np. 10 przekladasz 10 górnych kart na dół(0-24): ")
+    #     choice = int(input(""))
+    #     while (choice not in [0,24]):
+    #         choice = int(input("Wybierz poprawny zakres"))
+    #     if (choice in [0,24]):
+    #         print("Nie przekladasz wiec grajmy")
+    #         return 
+    #     postpone_deck = deck.deck[choice:deck.size-1] + deck.deck[0:choice]
+    #     deck.deck = postpone_deck
     
     def add_points_for_marriage(self,card_played,t_parm): # zmiana dodana funkcja za meldunek
         if card_played.figure == "Q" and len(t_parm.shift) == 0: # sprawdz czy gracz mial na rece krola o tym samym kolorze 
             have_king = any(k.figure == "K" and k.color_text == card_played.color_text for k in self.hand)
             if have_king: 
-                print("Rzuciles meldunek")
+                print("Rzucil meldunek")
                 self.bid_points += MARRIAGE[card_played.color_text]
                 return True
         else:
@@ -89,11 +111,11 @@ class Player():
         picked_card = self.hand.pop(ind)
         return picked_card, self.add_points_for_marriage(picked_card,t_args)
 
-
+    # @rozdziel # użycie dekoratora 
     def bid(self,current_rate):
         """Gracz dokonuje wybór licytuje albo przestaje licytowac"""
         self.show_cards_in_hand()
-        print(f"{"-"*50}\nGraczu: ", self.name)
+        print(f"\nGraczu: ", self.name)
         print(f"Trwa licytacja, podbijasz stawke o 10 ? Obecna najwyższa stawka {current_rate}")
         choice = input("Dokonaj choiceu 1/0 (1 - podbijam, 0 - koncze ): ")
         while choice not in ["0","1"]:
@@ -101,9 +123,7 @@ class Player():
         return int(choice)
 
     def deal_one_card_each(self, players, me):
-        # 1. Find opponents (everyone except us)
         opponents = [g for g in players if g != self]
-        
         print(f"\nYou must give one card to each opponent")
         for opponent in opponents:
             self.sort_by_card_value()
@@ -119,8 +139,17 @@ class Player():
                         print("Invalid card number. Try again.")
                 except ValueError:
                     print("Please enter an integer!")
-
-
-    def shuffle(self,deck):
-        """Shuffle a deck"""
-        deck.shuffle_deck()
+    # Mechanika bomby, możesz wykorzystać ją tylko raz w ciągu gry 
+    # Pyta sie czy chcesz uzyc tego mechanizmu cie w pierwszej turze
+    # Jezeli uzyjesz rozpoczyna sie nowa tura, a kazdy z graczy liczy liczbe kart ktora mial na rece i dodaje sobie do punktow
+    # Zmiany powstały w game.py i tutaj + dodano zmienna self.have_bomb nie chcialo mi sie dokanczac
+    # pomysl taki zeby wyniesc z funkcji end_round i zrobic nowa logike dla rzucenia bomby
+    #
+    def bomb(self):
+        print("Masz możliwość użyć 1 razowej deski ratunkowej bomby, jeżeli wiesz że nie wygrasz rundy")
+        choice = int(input(f"Wybierz 1- Używam, 0- Gramy: "))
+        if choice == 1:
+            self.have_bomb = False
+            return 1 
+        else:
+            return 0
