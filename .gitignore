@@ -1,8 +1,8 @@
-.playground/
-.updates/
-./test
-.data/
-.savegame.pkl
+playground/
+updates/
+test/
+data/
+savegame.pkl
 .venv/
 **/__pycache__/
 # isolated __pycache__

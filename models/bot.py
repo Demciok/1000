@@ -3,72 +3,84 @@ from utils.auxiliary import MARRIAGE
 import random
 
 
-class Bot(Player): # funkcja dziala jak bot ma meldunki to zwraca wartość
+class Bot(Player):
+    """A bot-controlled player with bidding and play decision logic."""
+
     def check_marriages(self):
-        queens = {k.color_text for k in self.hand if k.figure == "Q"} # set()
-        kings = {k.color_text for k in self.hand if k.figure == "K"} # set()
-        owned_marriages = queens & kings # część wspólna
+        """Return a set of marriage colors the bot holds in its hand."""
+        queens = {k.color_text for k in self.hand if k.figure == "Q"}
+        kings = {k.color_text for k in self.hand if k.figure == "K"}
+        owned_marriages = queens & kings
         if len(owned_marriages) == 0:
             return []
         else:
             return owned_marriages
 
     def add_marriages_points_end_round(self):
+        """Calculate total marriage bonus points for the end of round."""
         return sum([MARRIAGE[color_mar] for color_mar in self.check_marriages()])
-    
+
     def calculate_hand(self):
+        """Return the total value of cards currently in hand."""
         return sum(card.value for card in self.hand)
-    
+
     def calculate_max_bid(self):
+        """Estimate the maximum bid the bot is willing to make."""
         score = 0
-        meldunki_punkty = self.add_marriages_points_end_round()
-        score += meldunki_punkty
+        marriage_points = self.add_marriages_points_end_round()
+        score += marriage_points
 
         for card in self.hand:
-            if card.value == 11: # As
+            if card.value == 11:  # Ace
                 score += 15
-            elif card.value == 10: # 10
+            elif card.value == 10:  # Ten
                 score += 10
-            elif card.value == 4: # Król
+            elif card.value == 4:  # King
                 score += 4
 
         for color in ["wino", "zoladz", "dzwonek", "czerwo"]:
             card_in_color = len(self.check_color(color))
             if card_in_color >= 4:
                 score += 20
-        
-        max_bid = (score // 10 ) * 10
-        if meldunki_punkty == 0 and max_bid > 120:
+
+        max_bid = (score // 10) * 10
+        if marriage_points == 0 and max_bid > 120:
             max_bid = 120
-        
+
         return max_bid
-    
+
     def bid(self, current_rate):
-        if current_rate < self.calculate_max_bid() :
-            print(f"Bot: {self.name} podbija stawke ! ")
+        """Decide whether the bot raises the bid or drops out."""
+        if current_rate < self.calculate_max_bid():
+            print(f"Bot: {self.name} podbija stawke !")
             return 1
         else:
             print(f"Bot: {self.name} konczy licytacje ")
             return 0
 
-    def check_figure(self,figure):
-        return [e for e,card in enumerate(self.hand) 
+    def check_figure(self, figure):
+        """Return indices of cards matching the requested figure."""
+        return [e for e, card in enumerate(self.hand)
                 if card.figure == figure]
-    
-    def check_color(self,color):
-        return [card for e,card in enumerate(self.hand) 
-                if card.color == color ]     
-    
-    def return_lowest_value(self,color):
+
+    def check_color(self, color):
+        """Return all cards in hand matching the requested color."""
+        return [card for e, card in enumerate(self.hand)
+                if card.color == color]
+
+    def return_lowest_value(self, color):
+        """Return the lowest-value card of the specified color."""
         self.sort_by_card_value()
-        return [card for card in self.hand 
-                if card.color == color ][-1]
-    
-    def marriage_in_threecards(self,t_parm): 
-        return any([karta for karta in t_parm.shift.values() 
+        return [card for card in self.hand
+                if card.color == color][-1]
+
+    def marriage_in_threecards(self, t_parm):
+        """Return whether the trick includes a card in the marriage color."""
+        return any([karta for karta in t_parm.shift.values()
                     if karta.color == t_parm.marriage_color])
-    
-    def check_shift(self,t_parm): # tu zawsze nam zwraca karte ktora mamy zagrac
+
+    def check_shift(self, t_parm):
+        """Choose the best card to play when following suit."""
         cards_in_color = self.check_color(t_parm.color)
         if len(cards_in_color) > 0:
             if self.marriage_in_threecards(t_parm):
@@ -76,45 +88,48 @@ class Bot(Player): # funkcja dziala jak bot ma meldunki to zwraca wartość
             c = []
             if len(t_parm.shift) == 2:
                 for sz_card in t_parm.shift.values():
-                    c.append([card for card in self.hand 
+                    c.append([card for card in self.hand
                               if sz_card.value < card.value])
-                h_var = list(set(c[0])- set(c[1]))
+                h_var = list(set(c[0]) - set(c[1]))
                 if len(h_var) > 0 and h_var[0] != 0:
                     return h_var[0]
                 else:
                     return self.return_lowest_value(t_parm.color)
             else:
-                higher_cards = [card for card in self.hand 
+                higher_cards = [card for card in self.hand
                                 if list(t_parm.shift.values())[0].value < card.value]
                 if any(higher_cards):
                     return higher_cards[0]
                 else:
                     return self.return_lowest_value(t_parm.color)
-        else: 
-            if t_parm.marriage_color == None:
+        else:
+            if t_parm.marriage_color is None:
                 self.sort_by_card_value()
                 return self.hand[-1]
-            else: 
+            else:
                 self.sort_by_card_value()
                 cards = self.check_color(t_parm.marriage_color)
                 if len(cards) > 0:
-
                     return cards[0]
                 else:
-
                     return self.hand[-1]
-            
+
     def show_cards(self):
+        """Return a list of card names currently in hand."""
         return [card.name for card in self.hand]
-    def simple_logic(self,turn_parms):
-        if len(turn_parms.shift) == 0:  
+
+    def simple_logic(self, turn_parms):
+        """Execute the bot's simple play logic for the current turn."""
+        if len(turn_parms.shift) == 0:
             aces = self.check_figure("A")
-            cards_in_marriage_color = [e for e,card in enumerate(self.hand) if card.color_text == turn_parms.marriage_color]
-            meld = self.check_marriages() 
+            cards_in_marriage_color = [e for e, card in enumerate(self.hand)
+                                       if card.color_text == turn_parms.marriage_color]
+            meld = self.check_marriages()
             if len(aces) > 0:
-                return self.hand.pop(aces[0]) 
-            if len(meld) > 0: # szuka cards z figure dama i kolorem meldunku zwraca index a pozniej popuje i zwraca karte
-                return self.hand.pop([e for e,card in enumerate(self.hand) if card.color_text == list(meld)[0] and card.figure == "Q"][0])
+                return self.hand.pop(aces[0])
+            if len(meld) > 0:
+                return self.hand.pop([e for e, card in enumerate(self.hand)
+                                      if card.color_text == list(meld)[0] and card.figure == "Q"][0])
             if len(cards_in_marriage_color) > 0:
                 return self.hand.pop(cards_in_marriage_color[0])
             self.sort_by_card_value()
@@ -123,28 +138,22 @@ class Bot(Player): # funkcja dziala jak bot ma meldunki to zwraca wartość
             return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
         if len(turn_parms.shift) == 2:
             return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
-        
-        
+
     def play_card(self, turn_parms):
+        """Play a card according to bot strategy and return it with marriage points."""
         k = self.simple_logic(turn_parms)
         print(f"{'-'*50}\n {self.name} rzuca {k.name} \n {'-'*50}")
-        d = self.add_points_for_marriage(k,turn_parms)
-        return k,d
+        d = self.add_points_for_marriage(k, turn_parms)
+        return k, d
 
-    def deal_one_card_each(self,players,winner):
-        """Funkcja ktora byla poniewaz nie chcialo mi sie robic """
-        d = players 
-        d.remove(winner) 
-        for a in range(2): 
-            if a == 0:
-                picked = random.choice(self.hand)
-                print(f"{self.name} daje {picked} graczu {d[a].name}")
-                d[a].hand.append(picked)
-                self.hand.remove(picked)
-            else:
-                picked = random.choice(self.hand)
-                print(f"{self.name} daje {picked} graczu {d[a].name}")
-                d[a].hand.append(picked)
-                self.hand.remove(picked)
-        d.append(winner)
+    def deal_one_card_each(self, players, winner):
+        """Deal one random card each to the other two players."""
+        remaining = players
+        remaining.remove(winner)
+        for a in range(2):
+            picked = random.choice(self.hand)
+            print(f"{self.name} daje {picked} graczu {remaining[a].name}")
+            remaining[a].hand.append(picked)
+            self.hand.remove(picked)
+        remaining.append(winner)
         self.sort_by_card_value()

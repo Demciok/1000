@@ -6,6 +6,8 @@ init()
 SEPARATOR = '-'*50
 
 class Player():
+    """Represents a human player and manages hand, bidding, and trick scoring."""
+
     def __init__(self,name: str,points: int ):
         self.name = name
         self.points = points
@@ -17,7 +19,7 @@ class Player():
         self.have_bomb = True
 
 
-    @staticmethod # dekorator służący do rozdzielania poszczególnych tekstów zapytań 
+    @staticmethod # decorator used to separate prompt text blocks
     def rozdziel(funkcja):
 
         def wrapper(*args,**kwargs):
@@ -32,7 +34,7 @@ class Player():
 
 
     def reset_hand(self):
-        """Resetuje klase gracze by zacząć nową runde"""
+        """Reset player state to start a new round."""
         self.bid_points = 0
         self.winned_tricks = []
         self.hand = []
@@ -40,24 +42,24 @@ class Player():
         self.has_bid = True
 
     def calculate_round_score(self) -> int:
-        """Zwraca sume zebranych punktów z kart i meldunku"""
+        """Return the rounded score from tricks and marriage points."""
         amount = sum([card.value for trick in self.winned_tricks for card in trick]) + self.bid_points 
         amount_round = (amount + 5 ) // 10 * 10
         return amount_round
 
     def get_points(self) -> int:
-        """Zwraca posiadane punkty"""
+        """Return the player's current total points."""
         return self.points
     
     def sort_by_card_value(self):
-        """Sortuje karty na rece po wartosciach"""
+        """Sort the player's hand by card value in descending order."""
         current_hand = [card for card in self.hand]
         current_hand.sort(key=attrgetter("value"),reverse=True)
         self.hand = current_hand
 
     @rozdziel
     def show_cards_in_hand(self):
-        """Sortuje i wyświetla posiadane obecnie karty""" 
+        """Sort and display the player's current hand by suit."""
         self.sort_by_card_value()          # {" ".join(f"{k.name({self.hand.index(k)})})}
         print("Twoja reka tak się prezentuje") # {" | ".join([f"{k.name}({self.hand.index(k)})" for k in self.hand if k.kolor == t_kolor]) }
         print(Fore.RED + f"Czerwa: {" | ".join([f"{k.name} ({self.hand.index(k)})" for k in self.hand if k.color_text == "czerwo"]) }" )
@@ -67,11 +69,11 @@ class Player():
         print(Style.RESET_ALL, end="")
 
     def shuffle(self,deck):
-        """Shuffle a deck"""
+        """Shuffle a deck."""
         deck.shuffle_deck()
     
-    def add_points_for_marriage(self,card_played,t_parm): # zmiana dodana funkcja za meldunek
-        if card_played.figure == "Q" and len(t_parm.shift) == 0: # sprawdz czy gracz mial na rece krola o tym samym kolorze 
+    def add_points_for_marriage(self,card_played,t_parm): # added function for marriage points
+        if card_played.figure == "Q" and len(t_parm.shift) == 0: # check if the player has a matching king in hand
             have_king = any(k.figure == "K" and k.color_text == card_played.color_text for k in self.hand)
             if have_king: 
                 print("Rzucil meldunek")
@@ -81,11 +83,11 @@ class Player():
             return False
 
     def play_card(self,t_args):
-        """"Mechanizm zagrywania karty przez gracza"""
+        """Prompt the player to select a card to play."""
         self. show_cards_in_hand()
-        ind = input(f"Podaj numer karty, która chcesz wyrzucić (od 0 do {len(self.hand)-1}): ")
+        ind = input(f"Podaj numer karty, którą chcesz wyrzucić (od 0 do {len(self.hand)-1}): ")
         while ind not in [str(a) for a in range(len(self.hand))]:
-            ind = input(f"Zły choice. Wybierz karte (od 0 do {len(self.hand)-1}): ")
+            ind = input(f"Zły wybór. Wybierz kartę (od 0 do {len(self.hand)-1}): ")
         ind = int(ind)
         while True:
           #  if ind > 0 and ind < len(self.hand) and type(ind) == "int": ind = int()
@@ -99,31 +101,31 @@ class Player():
         picked_card = self.hand.pop(ind)
         return picked_card, self.add_points_for_marriage(picked_card,t_args)
 
-    # @rozdziel # użycie dekoratora 
     def bid(self,current_rate):
-        """Gracz dokonuje wybór licytuje albo przestaje licytowac"""
+        """Ask the player whether to raise the bid or pass."""
         self.show_cards_in_hand()
-        print(f"\nGraczu: ", self.name)
-        print(f"Trwa licytacja, podbijasz stawke o 10 ? Obecna najwyższa stawka {current_rate}")
-        choice = input("Dokonaj choiceu 1/0 (1 - podbijam, 0 - koncze ): ")
+        print(f"\nGraczu: {self.name}")
+        print(f"Trwa licytacja, podbijasz stawkę o 10? Obecna najwyższa stawka {current_rate}")
+        choice = input("Dokonaj wyboru 1/0 (1 - podbijam, 0 - kończę): ")
         while choice not in ["0","1"]:
-            choice = input("Zły wybór wybierz poprawnie (1/0): ")
+            choice = input("Zły wybór, wybierz poprawnie (1/0): ")
         return int(choice)
 
     def deal_one_card_each(self, players, me):
+        """Give one card to each opponent after winning the bid."""
         opponents = [g for g in players if g != self]
-        print(f"\nYou must give one card to each opponent")
+        print(f"\nMusisz dać jedną kartę każdemu przeciwnikowi")
         for opponent in opponents:
             self.sort_by_card_value()
             self.show_cards_in_hand()
             while True:
                 try:
-                    choice = int(input(f"Select card number for player {opponent.name}: "))
+                    choice = int(input(f"Wybierz numer karty do oddania graczowi {opponent.name}: "))
                     if 0 <= choice < len(self.hand):
                         dealt_card = self.hand.pop(choice)
                         opponent.hand.append(dealt_card)
                         break
                     else:
-                        print("Invalid card number. Try again.")
+                        print("Niepoprawny numer karty. Spróbuj ponownie.")
                 except ValueError:
-                    print("Please enter an integer!")
+                    print("Wprowadź liczbę całkowitą!")
