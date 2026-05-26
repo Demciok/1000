@@ -3,13 +3,14 @@ from .card import Card
 import random
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent # __file__ -> plik talia.py parent -> wczesniejszy katalog -> parent.parent -> wczesniejszy wczesniejszy katalog
+BASE_DIR = Path(__file__).resolve().parent.parent 
 KARTY_PATH = BASE_DIR / 'resources' / "cards.json"
 
 class Deck():
     def __init__(self,deck =[]):
         self.deck = deck
         self.size = 24
+
     
     def get_deck(self):
         """Zwraca nazwy kart znajdujących się w talii"""

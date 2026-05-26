@@ -124,12 +124,10 @@ class Bot(Player): # funkcja dziala jak bot ma meldunki to zwraca wartość
         if len(turn_parms.shift) == 2:
             return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
         
-    # def advance_logic(self, turn_parms):
-    #     pass   
         
     def play_card(self, turn_parms):
         k = self.simple_logic(turn_parms)
-        print(f"{"-"*50}\n {self.name} rzuca {k.name} \n {"-"*50}")
+        print(f"{'-'*50}\n {self.name} rzuca {k.name} \n {'-'*50}")
         d = self.add_points_for_marriage(k,turn_parms)
         return k,d
 

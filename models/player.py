@@ -3,6 +3,7 @@ from operator import attrgetter
 from utils.auxiliary import MARRIAGE
 
 init()
+SEPARATOR = '-'*50
 
 class Player():
     def __init__(self,name: str,points: int ):
@@ -20,11 +21,11 @@ class Player():
     def rozdziel(funkcja):
 
         def wrapper(*args,**kwargs):
-            print(f"{"-"*50}")
+            print(f"{SEPARATOR}")
 
             wynik = funkcja(*args,**kwargs)
 
-            print(f"{"-"*50}")
+            print(f"{SEPARATOR}")
             return wynik
         
         return wrapper
@@ -68,19 +69,6 @@ class Player():
     def shuffle(self,deck):
         """Shuffle a deck"""
         deck.shuffle_deck()
-
-    # FUNKCJA NIEUZYWANA
-    # def postpone_deck(self,deck):
-    #     """Pozwala przełożyć karty graczowi"""
-    #     print("Wybierasz od góry jak przełożyć karty np. 10 przekladasz 10 górnych kart na dół(0-24): ")
-    #     choice = int(input(""))
-    #     while (choice not in [0,24]):
-    #         choice = int(input("Wybierz poprawny zakres"))
-    #     if (choice in [0,24]):
-    #         print("Nie przekladasz wiec grajmy")
-    #         return 
-    #     postpone_deck = deck.deck[choice:deck.size-1] + deck.deck[0:choice]
-    #     deck.deck = postpone_deck
     
     def add_points_for_marriage(self,card_played,t_parm): # zmiana dodana funkcja za meldunek
         if card_played.figure == "Q" and len(t_parm.shift) == 0: # sprawdz czy gracz mial na rece krola o tym samym kolorze 
@@ -139,17 +127,3 @@ class Player():
                         print("Invalid card number. Try again.")
                 except ValueError:
                     print("Please enter an integer!")
-    # Mechanika bomby, możesz wykorzystać ją tylko raz w ciągu gry 
-    # Pyta sie czy chcesz uzyc tego mechanizmu cie w pierwszej turze
-    # Jezeli uzyjesz rozpoczyna sie nowa tura, a kazdy z graczy liczy liczbe kart ktora mial na rece i dodaje sobie do punktow
-    # Zmiany powstały w game.py i tutaj + dodano zmienna self.have_bomb nie chcialo mi sie dokanczac
-    # pomysl taki zeby wyniesc z funkcji end_round i zrobic nowa logike dla rzucenia bomby
-    #
-    def bomb(self):
-        print("Masz możliwość użyć 1 razowej deski ratunkowej bomby, jeżeli wiesz że nie wygrasz rundy")
-        choice = int(input(f"Wybierz 1- Używam, 0- Gramy: "))
-        if choice == 1:
-            self.have_bomb = False
-            return 1 
-        else:
-            return 0

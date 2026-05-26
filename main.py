@@ -25,7 +25,7 @@ def setup_new_game():
         Player2 = Player("gracz2",0) # nazwij_gracz()
         Player3 = Player("gracz3",0) # nazwij_gracz()
     else:
-        Player1 = Player("czlowiek",0) 
+        Player1 = Bot("czlowiek",0) 
         Player2 = Bot("LLama",0)
         Player3 = Bot("Claude",0)
 
@@ -40,7 +40,6 @@ def run_game_loop(gameplay):
         gameplay.deck.deal_cards(gameplay)
         gameplay.auction()
         gameplay.round()
-        gameplay.end_round()
         gameplay.show_score()
         gameplay.players[gameplay.bidding_player].shuffle(gameplay.deck)
 
@@ -63,6 +62,8 @@ def main_save():
     except KeyboardInterrupt:
         save_state(game)
         sys.exit(0) 
+
+
 def main():
     game = setup_new_game()
     run_game_loop(game)
