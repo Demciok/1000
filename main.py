@@ -6,6 +6,12 @@ from utils.auxiliary import pick_game_mode, name_a_player
 import os
 import pickle
 import sys
+
+# SAVE GAME 
+# setup_new_game tutaj zmienic 
+# dodać opcje taka ze z jakiegos pliku losowo są losowane nazwy graczy 
+# jeszcze mozna dodac na poczatku czy chcesz zagrać z zapisem gry gre 
+# bedzie 1 tak 0 nie i bedzie sie zapisywać albo nie 
  
 def save_state(game_data, filename="savegame.pkl"):
         with open(filename,"wb") as f:
@@ -17,6 +23,27 @@ def load_state(filename="savegame.pkl"):
           with open(filename, "rb") as f:
                return pickle.load(f)
      return None
+
+def main_save():
+    state = load_state()
+    game = None
+
+    if state:
+        choice = input("Znaleziono zapisany stan gry! Czy chcesz kontynuować? (t/n): ")
+        if choice.lower() == 't':
+            game = state
+            print("Wczytano grę!")
+        else:
+            game = setup_new_game()
+    else:
+        game = setup_new_game()
+
+    try:
+        run_game_loop(game)
+    except KeyboardInterrupt:
+        save_state(game)
+        sys.exit(0) 
+
 
 def setup_new_game():
 
@@ -42,26 +69,6 @@ def run_game_loop(gameplay):
         gameplay.round()
         gameplay.show_score()
         gameplay.players[gameplay.bidding_player].shuffle(gameplay.deck)
-
-def main_save():
-    state = load_state()
-    game = None
-
-    if state:
-        choice = input("Znaleziono zapisany stan gry! Czy chcesz kontynuować? (t/n): ")
-        if choice.lower() == 't':
-            game = state
-            print("Wczytano grę!")
-        else:
-            game = setup_new_game()
-    else:
-        game = setup_new_game()
-
-    try:
-        run_game_loop(game)
-    except KeyboardInterrupt:
-        save_state(game)
-        sys.exit(0) 
 
 
 def main():

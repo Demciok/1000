@@ -11,6 +11,7 @@ INITIAL_BID = 100
 BID_RAISE = 10
 SEPARATOR = "-" * 50
 TOTAL_TURNS = 8
+ENABLE_DATA_COLLECTION = False
 
 
 class Game():
@@ -33,6 +34,7 @@ class Game():
         self.active_marriage = None  # marriage is a pair of King and Queen
         self.gamemode = ""
         self.deck = []
+        #game record
         self.gamerecorder = gamerecorder.Gamerecorder()
 
     def calculate_quantity_of_bidding_players(self):
@@ -81,7 +83,8 @@ class Game():
     def auction(self):
         """Handle the full auction phase and determine the bidding winner."""
         # Game recording
-        self.gamerecorder.record_start_game(self.get_players_data(), {" ".join([card.name for card in self.threecards])})
+        if ENABLE_DATA_COLLECTION:
+            self.gamerecorder.record_start_game(self.get_players_data(), {" ".join([card.name for card in self.threecards])})
 
         print("Zaczynamy licytacje")
 
@@ -98,7 +101,8 @@ class Game():
                 player_bid_choice = player.bid(self.highest_bid())
 
                 # Game recording
-                self.gamerecorder.record_bid(player.name, player_bid_choice, self.highest_bid(), self.calculate_quantity_of_bidding_players())
+                if ENABLE_DATA_COLLECTION:
+                    self.gamerecorder.record_bid(player.name, player_bid_choice, self.highest_bid(), self.calculate_quantity_of_bidding_players())
 
                 if not player.has_bid:
                     continue
@@ -118,7 +122,8 @@ class Game():
         winner.deal_one_card_each(self.players, winner)
 
         # Game recording
-        self.gamerecorder.record_turn(self.get_players_data())
+        if ENABLE_DATA_COLLECTION:
+            self.gamerecorder.record_turn(self.get_players_data())
 
         print(f"{SEPARATOR}\n Zaczynamy grę \n{SEPARATOR}")
 
@@ -155,7 +160,8 @@ class Game():
                 n_turn.shift[start_player] = played_card
 
             # Game recording
-            self.gamerecorder.record_turn({i: gm_helper})
+            if ENABLE_DATA_COLLECTION:
+                self.gamerecorder.record_turn({i: gm_helper})
 
             trick_winner = self.trick_winner(n_turn)
             print(f"Ture wygrywa {trick_winner.name}")
@@ -187,7 +193,8 @@ class Game():
             player.points += points_to_add
 
             # Game recording
-            self.gamerecorder.record_points((player.name, points_to_add))
+            if ENABLE_DATA_COLLECTION:
+                self.gamerecorder.record_points((player.name, points_to_add))
 
         for player in self.players:
             player.reset_hand()
@@ -200,7 +207,8 @@ class Game():
                     sys.exit()
 
         # Game recording
-        self.gamerecorder.save_round()
+        if ENABLE_DATA_COLLECTION:
+            self.gamerecorder.save_round()
 
     def zapisz_stan_gry(self):
         """Placeholder for saving the current game state."""
