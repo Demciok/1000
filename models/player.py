@@ -5,7 +5,7 @@ from utils.auxiliary import MARRIAGE
 init()
 SEPARATOR = '-'*50
 
-class Player():
+class Player(BasePlayer):
     """Represents a human player and manages hand, bidding, and trick scoring."""
 
     def __init__(self,name: str,points: int ):
@@ -16,7 +16,6 @@ class Player():
         self.has_bid = True # check if you are bidding in auction
         self.winned_tricks = [] # cards that you win from the turn
         self.bid_points = 0 # points for marriage 
-        self.have_bomb = True
 
 
     @staticmethod # decorator used to separate prompt text blocks

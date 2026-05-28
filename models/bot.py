@@ -1,9 +1,9 @@
-from .player import Player
+from .baseplayer import BasePlayer
 from utils.auxiliary import MARRIAGE
 import random
 
 
-class Bot(Player):
+class Bot(BasePlayer):
     """A bot-controlled player with bidding and play decision logic."""
 
     def check_marriages(self):
