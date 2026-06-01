@@ -6,4 +6,4 @@ savegame.pkl
 .venv/
 **/__pycache__/
 # isolated __pycache__
-
+savegame.pkl
