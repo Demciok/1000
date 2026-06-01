@@ -2,16 +2,13 @@ from models.bot import Bot
 from models.player import Player
 from models.deck import Deck
 from game.game import Game
-from utils.auxiliary import pick_game_mode, name_a_player
+from utils.auxiliary import pick_game_mode, name_a_player, random_player_name
 import os
 import pickle
 import sys
 
 # SAVE GAME 
-# setup_new_game tutaj zmienic 
-# dodać opcje taka ze z jakiegos pliku losowo są losowane nazwy graczy 
-# jeszcze mozna dodac na poczatku czy chcesz zagrać z zapisem gry gre 
-# bedzie 1 tak 0 nie i bedzie sie zapisywać albo nie 
+
  
 def save_state(game_data, filename="savegame.pkl"):
         with open(filename,"wb") as f:
@@ -48,13 +45,13 @@ def main_save():
 def setup_new_game():
 
     if pick_game_mode():
-        Player1 = Player("gracz1",0) # nazwij_gracz()
-        Player2 = Player("gracz2",0) # nazwij_gracz()
-        Player3 = Player("gracz3",0) # nazwij_gracz()
+        Player1 = Player(random_player_name(),0)
+        Player2 = Player(random_player_name(),0) 
+        Player3 = Player(random_player_name(),0) 
     else:
         Player1 = Bot("czlowiek",0) 
-        Player2 = Bot("LLama",0)
-        Player3 = Bot("Claude",0)
+        Player2 = Bot("Claude",0)
+        Player3 = Bot("Gemini",0)
 
     gameplay = Game([Player1,Player2,Player3])
     gameplay.deck = Deck()
@@ -76,4 +73,4 @@ def main():
     run_game_loop(game)
 
 if __name__ == "__main__":
-    main()
+    main_save()

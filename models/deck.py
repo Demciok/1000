@@ -49,5 +49,7 @@ class Deck():
                 game.players[1].hand.append(card)
             elif len(game.players[2].hand) < i:
                 game.players[2].hand.append(card)
-            else:
+            elif len(game.threecards) < 3:
                 game.threecards.append(card)
+            else:
+                continue

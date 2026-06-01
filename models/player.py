@@ -1,7 +1,7 @@
 from colorama import Fore, Style, init
 from operator import attrgetter
 from utils.auxiliary import MARRIAGE
-
+from .baseplayer import BasePlayer
 init()
 SEPARATOR = '-'*50
 
