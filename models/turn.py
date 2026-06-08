@@ -3,6 +3,6 @@ from dataclasses import dataclass
 class Turn:
     """Helper class for a round"""
     turn_number: int
-    shift: dict # szychta
+    shift: dict # trick 
     color: str
     marriage_color: str # kolor meldunku 
