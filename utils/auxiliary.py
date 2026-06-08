@@ -30,3 +30,10 @@ def random_player_name():
 def name_a_player():
     """Ask the user for a player name."""
     return str(input("Wybierz nazwe dla gracza"))
+
+
+def choose_language():
+    lan = input("Choose langauge (pl/en): ")
+    while lan not in ["pl", "en"]:
+        lan = input("Choose langauge (pl/en): ")
+    return str(lan)
