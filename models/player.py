@@ -27,10 +27,10 @@ class Player(BasePlayer):
         """Sort and display the player's current hand by suit."""
         self.sort_by_card_value()          
         print("Twoja reka tak się prezentuje")
-        print(Fore.RED + f"Czerwa: {" | ".join(self.check_text_color("czerwo")) }" )
-        print(Fore.RED + f"Dzwonki: {" | ".join(self.check_text_color("dzwonek")) }" )
-        print(Fore.BLACK + f"Zoladzie: {" | ".join(self.check_text_color("zoladz")) }" )
-        print(Fore.BLACK + f"Wina: {" | ".join(self.check_text_color("wino")) }" )
+        print(Fore.RED + f"Czerwa: {' | '.join(self.check_text_color('czerwo'))}")
+        print(Fore.RED + f"Dzwonki: {' | '.join(self.check_text_color('dzwonek'))}")
+        print(Fore.BLACK + f"Zoladzie: {' | '.join(self.check_text_color('zoladz'))}")
+        print(Fore.BLACK + f"Wina: {' | '.join(self.check_text_color('wino'))}")
         print(Style.RESET_ALL, end="")
 
 
@@ -45,7 +45,8 @@ class Player(BasePlayer):
           #  if ind > 0 and ind < len(self.hand) and type(ind) == "int": ind = int()
             if t_args.color != None and self.hand[ind].color != t_args.color:
                 if len([card for card in self.hand if card.color == t_args.color]) != 0: 
-                    ind = int(input(f"Nie możesz rzucić innego koloru niż {t_args.color}. Wybierz {" | ".join([f"{k.name}({self.hand.index(k)})" for k in self.hand if k.color == t_args.color]) }: "))
+                    options = ' | '.join([f"{k.name}({self.hand.index(k)})" for k in self.hand if k.color == t_args.color])
+                    ind = int(input(f"Nie możesz rzucić innego koloru niż {t_args.color}. Wybierz {options}: "))
                 else:
                     break
             else:
