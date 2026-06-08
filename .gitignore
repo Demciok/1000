@@ -1,9 +1,8 @@
 playground/
 updates/
-data/
 savegame.pkl
 .venv/
-**/__pycache__/
-# isolated __pycache__
 
+# isolated __pycache__
+**/__pycache__/
 .pytest_cache/
