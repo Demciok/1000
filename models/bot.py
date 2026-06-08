@@ -6,6 +6,22 @@ import random
 class Bot(BasePlayer):
     """A bot-controlled player with bidding and play decision logic."""
 
+    def check_figure(self, figure):
+        """Return indices of cards matching the requested figure."""
+        return [e for e, card in enumerate(self.hand)
+                if card.figure == figure]
+
+    def return_lowest_value(self, color):
+        """Return the lowest-value card of the specified color."""
+        self.sort_by_card_value()
+        return [card for card in self.hand
+                if card.color == color][-1]
+
+    def marriage_in_threecards(self, t_parm):
+        """Return whether the trick includes a card in the marriage color."""
+        return any([karta for karta in t_parm.shift.values()
+                    if karta.color == t_parm.marriage_color])
+
     def check_marriages(self):
         """Return a set of marriage colors the bot holds in its hand."""
         queens = {k.color_text for k in self.hand if k.figure == "Q"}
@@ -15,19 +31,16 @@ class Bot(BasePlayer):
             return []
         else:
             return owned_marriages
-
-    def add_marriages_points_end_round(self):
+        
+    def sum_marriages_points(self):
         """Calculate total marriage bonus points for the end of round."""
         return sum([MARRIAGE[color_mar] for color_mar in self.check_marriages()])
-
-    def calculate_hand(self):
-        """Return the total value of cards currently in hand."""
-        return sum(card.value for card in self.hand)
+    
 
     def calculate_max_bid(self):
         """Estimate the maximum bid the bot is willing to make."""
         score = 0
-        marriage_points = self.add_marriages_points_end_round()
+        marriage_points = self.sum_marriages_points()
         score += marriage_points
 
         for card in self.hand:
@@ -49,35 +62,6 @@ class Bot(BasePlayer):
 
         return max_bid
 
-    def bid(self, current_rate):
-        """Decide whether the bot raises the bid or drops out."""
-        if current_rate < self.calculate_max_bid():
-            print(f"Bot: {self.name} podbija stawke !")
-            return 1
-        else:
-            print(f"Bot: {self.name} konczy licytacje ")
-            return 0
-
-    def check_figure(self, figure):
-        """Return indices of cards matching the requested figure."""
-        return [e for e, card in enumerate(self.hand)
-                if card.figure == figure]
-
-    def check_color(self, color):
-        """Return all cards in hand matching the requested color."""
-        return [card for e, card in enumerate(self.hand)
-                if card.color == color]
-
-    def return_lowest_value(self, color):
-        """Return the lowest-value card of the specified color."""
-        self.sort_by_card_value()
-        return [card for card in self.hand
-                if card.color == color][-1]
-
-    def marriage_in_threecards(self, t_parm):
-        """Return whether the trick includes a card in the marriage color."""
-        return any([karta for karta in t_parm.shift.values()
-                    if karta.color == t_parm.marriage_color])
 
     def check_shift(self, t_parm):
         """Choose the best card to play when following suit."""
@@ -114,10 +98,6 @@ class Bot(BasePlayer):
                 else:
                     return self.hand[-1]
 
-    def show_cards(self):
-        """Return a list of card names currently in hand."""
-        return [card.name for card in self.hand]
-
     def simple_logic(self, turn_parms):
         """Execute the bot's simple play logic for the current turn."""
         if len(turn_parms.shift) == 0:
@@ -138,13 +118,22 @@ class Bot(BasePlayer):
             return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
         if len(turn_parms.shift) == 2:
             return self.hand.pop(self.hand.index(self.check_shift(turn_parms)))
+        
+    def bid(self, current_rate):
+        """Decide whether the bot raises the bid or drops out."""
+        if current_rate < self.calculate_max_bid():
+            print(f"Bot: {self.name} podbija stawke !")
+            return 1
+        else:
+            print(f"Bot: {self.name} konczy licytacje ")
+            return 0
 
     def play_card(self, turn_parms):
         """Play a card according to bot strategy and return it with marriage points."""
-        k = self.simple_logic(turn_parms)
-        print(f"{'-'*50}\n {self.name} rzuca {k.name} \n {'-'*50}")
-        d = self.add_points_for_marriage(k, turn_parms)
-        return k, d
+        card = self.simple_logic(turn_parms)
+        print(f"{'-'*50}\n {self.name} rzuca {card.name} \n {'-'*50}")
+        mar = self.add_points_for_marriage(card, turn_parms)
+        return card, mar
 
     def deal_one_card_each(self, players, winner):
         """Deal one random card each to the other two players."""

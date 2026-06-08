@@ -2,7 +2,8 @@ from models.bot import Bot
 from models.player import Player
 from models.deck import Deck
 from game.game import Game
-from utils.auxiliary import pick_game_mode, name_a_player, random_player_name
+from models.languagemanager import LanguageManager
+from utils.auxiliary import pick_game_mode, name_a_player, random_player_name, choose_language
 import os
 import pickle
 import sys
@@ -43,15 +44,16 @@ def main_save():
 
 
 def setup_new_game():
-
+    lan = choose_language()
+    lm = LanguageManager(lan)
     if pick_game_mode():
-        Player1 = Player(random_player_name(),0)
-        Player2 = Player(random_player_name(),0) 
-        Player3 = Player(random_player_name(),0) 
+        Player1 = Player(random_player_name(),lm,0)
+        Player2 = Player(random_player_name(),lm,0) 
+        Player3 = Player(random_player_name(),lm,0) 
     else:
-        Player1 = Bot("czlowiek",0) 
-        Player2 = Bot("Claude",0)
-        Player3 = Bot("Gemini",0)
+        Player1 = Player("czlowiek",lm,0) 
+        Player2 = Bot("Claude",lm,0)
+        Player3 = Bot("Gemini",lm,0)
 
     gameplay = Game([Player1,Player2,Player3])
     gameplay.deck = Deck()
@@ -73,4 +75,4 @@ def main():
     run_game_loop(game)
 
 if __name__ == "__main__":
-    main_save()
+    main()

@@ -1,9 +1,9 @@
 class Card():
-    def __init__(self, color="", figure="", value="", name=""):
+    def __init__(self, color:str ="", figure:str ="", value:str = "", name:str =""):
         self.color = color
         self.figure = figure
         self.value = value
-        self.color_text = ""
+        self.color_text = name
         self.name = self.figure + name
 
     def __str__(self):

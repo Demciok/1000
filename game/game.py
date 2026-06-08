@@ -145,15 +145,17 @@ class Game():
         for i in range(TOTAL_TURNS):
             n_turn = Turn(i + 1, {}, None, marriage)
 
-            gm_helper = {}
+            if ENABLE_DATA_COLLECTION: gm_helper = {}
+
             for j in range(len(self.players)):
                 start_player = self.players[(j + self.players.index(self.start_trick)) % len(self.players)]
                 played_card, store_marriage = start_player.play_card(n_turn)
 
                 # Game recording
-                gm_helper[start_player.name] = played_card.name
+                if ENABLE_DATA_COLLECTION: gm_helper[start_player.name] = played_card.name
 
                 if store_marriage:
+                    print(SEPARATOR + f"\n Rzucil meldunek {played_card.color} \n " + SEPARATOR)
                     marriage = played_card.color
                 if j == 0:
                     n_turn.color = played_card.color

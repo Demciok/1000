@@ -26,7 +26,7 @@ class Player(BasePlayer):
     def show_cards_in_hand(self):
         """Sort and display the player's current hand by suit."""
         self.sort_by_card_value()          
-        print("Twoja reka tak się prezentuje") 
+        print("Twoja reka tak się prezentuje")
         print(Fore.RED + f"Czerwa: {" | ".join(self.check_text_color("czerwo")) }" )
         print(Fore.RED + f"Dzwonki: {" | ".join(self.check_text_color("dzwonek")) }" )
         print(Fore.BLACK + f"Zoladzie: {" | ".join(self.check_text_color("zoladz")) }" )
