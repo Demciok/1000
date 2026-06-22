@@ -1,0 +1,12 @@
+Dokumentacja Gry 1000
+=====================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Spis treści:
+
+   modules
+   models
+   utils
+   main
+   game
