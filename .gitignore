@@ -6,3 +6,4 @@ savegame.pkl
 # isolated __pycache__
 **/__pycache__/
 .pytest_cache/
+test/test_MCTS.py

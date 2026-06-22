@@ -82,28 +82,28 @@
       "type": "print",
       "class": "Bot",
       "method": "bid",
-      "text": "Bot: {self.name} podbija stawke !"
+      "text": "Bot: {bot.name} podbija stawke !"
     },
     {
       "id": 13,
       "type": "print",
       "class": "Bot",
       "method": "bid",
-      "text": "Bot: {self.name} konczy licytacje"
+      "text": "Bot: {bot.name} konczy licytacje"
     },
     {
       "id": 14,
       "type": "print",
       "class": "Bot",
       "method": "play_card",
-      "text": "{self.name} rzuca {k.name}"
+      "text": "{bot.name} rzuca {card.name}"
     },
     {
       "id": 15,
       "type": "print",
       "class": "Bot",
       "method": "deal_one_card_each",
-      "text": "{self.name} daje {picked} graczu {player.name}"
+      "text": "{bot.name} daje {picked} graczu {recipient.name}"
     },
     {
       "id": 16,
@@ -145,7 +145,7 @@
       "type": "print",
       "class": "Player",
       "method": "bid",
-      "text": "Graczu: {self.name}"
+      "text": "Graczu: {player.name}"
     },
     {
       "id": 22,
@@ -279,6 +279,13 @@
       "class": "auxiliary",
       "method": "choose_language",
       "text": "Choose language (pl/en): "
+    },
+    {
+      "id": 41,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Rzucil meldunek {color}"
     }
   ],
   "en": [
@@ -364,28 +371,28 @@
       "type": "print",
       "class": "Bot",
       "method": "bid",
-      "text": "Bot: {self.name} raises the bid!"
+      "text": "Bot: {bot.name} raises the bid!"
     },
     {
       "id": 13,
       "type": "print",
       "class": "Bot",
       "method": "bid",
-      "text": "Bot: {self.name} passes the auction"
+      "text": "Bot: {bot.name} passes the auction"
     },
     {
       "id": 14,
       "type": "print",
       "class": "Bot",
       "method": "play_card",
-      "text": "{self.name} plays {k.name}"
+      "text": "{bot.name} plays {card.name}"
     },
     {
       "id": 15,
       "type": "print",
       "class": "Bot",
       "method": "deal_one_card_each",
-      "text": "{self.name} gives {picked} to player {player.name}"
+      "text": "{bot.name} gives {picked} to player {recipient.name}"
     },
     {
       "id": 16,
@@ -427,7 +434,7 @@
       "type": "print",
       "class": "Player",
       "method": "bid",
-      "text": "Player: {self.name}"
+      "text": "Player: {player.name}"
     },
     {
       "id": 22,
@@ -561,6 +568,13 @@
       "class": "auxiliary",
       "method": "choose_language",
       "text": "Choose language (pl/en): "
+    },
+    {
+      "id": 41,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Marriage played: {color}"
     }
   ]
 }

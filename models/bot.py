@@ -1,10 +1,29 @@
 from .baseplayer import BasePlayer
 from utils.auxiliary import MARRIAGE
+from .languagemanager import LanguageManager
 import random
 
 
 class Bot(BasePlayer):
     """A bot-controlled player with bidding and play decision logic."""
+
+    def _language_manager(self):
+        if self.lm is None:
+            self.lm = LanguageManager()
+        return self.lm
+
+    def _text(self, message_id, **kwargs):
+        text = self._language_manager().get_text(message_id)
+        if text is None:
+            return None
+
+        try:
+            return text.format(**kwargs)
+        except Exception:
+            return text
+
+    def _print_text(self, message_id, **kwargs):
+        return self._language_manager().print_by_id(message_id, **kwargs)
 
     def check_figure(self, figure):
         """Return indices of cards matching the requested figure."""
@@ -122,16 +141,16 @@ class Bot(BasePlayer):
     def bid(self, current_rate):
         """Decide whether the bot raises the bid or drops out."""
         if current_rate < self.calculate_max_bid():
-            print(f"Bot: {self.name} podbija stawke !")
+            self._print_text(12, bot=self)
             return 1
         else:
-            print(f"Bot: {self.name} konczy licytacje ")
+            self._print_text(13, bot=self)
             return 0
 
     def play_card(self, turn_parms):
         """Play a card according to bot strategy and return it with marriage points."""
         card = self.simple_logic(turn_parms)
-        print(f"{'-'*50}\n {self.name} rzuca {card.name} \n {'-'*50}")
+        self._print_text(14, bot=self, card=card)
         mar = self.add_points_for_marriage(card, turn_parms)
         return card, mar
 
@@ -141,7 +160,7 @@ class Bot(BasePlayer):
         remaining.remove(winner)
         for a in range(2):
             picked = random.choice(self.hand)
-            print(f"{self.name} daje {picked} graczu {remaining[a].name}")
+            self._print_text(15, bot=self, picked=picked, recipient=remaining[a])
             remaining[a].hand.append(picked)
             self.hand.remove(picked)
         remaining.append(winner)

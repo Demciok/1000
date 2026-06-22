@@ -3,6 +3,7 @@ import random
 from models.player import Player
 import sys
 from data import gamerecorder
+from models.languagemanager import LanguageManager
 
 
 POINTS_TO_WIN = 1000
@@ -23,11 +24,12 @@ class Game():
             "3": {"name": self.players[2].name, "hand": [c.name for c in self.players[2].hand]}
         }
 
-    def __init__(self, players=None, threecards=None):
+    def __init__(self, players=None, threecards=None, language: LanguageManager = None):
         """Initialize the game state with players, the three-card pool, and a recorder."""
         self.threecards = threecards or []
         self.players = players or []
         self.round_number = 1
+        self.lm = language or LanguageManager()
         self.starting_player = self.draw_player()
         self.bidding_player = self.calculate_bidding_player()
         self.start_trick = None
@@ -37,16 +39,34 @@ class Game():
         #game record
         self.gamerecorder = gamerecorder.Gamerecorder()
 
+    def _language_manager(self):
+        if self.lm is None:
+            self.lm = LanguageManager()
+        return self.lm
+
+    def _text(self, message_id, **kwargs):
+        text = self._language_manager().get_text(message_id)
+        if text is None:
+            return None
+
+        try:
+            return text.format(**kwargs)
+        except Exception:
+            return text
+
+    def _print_text(self, message_id, **kwargs):
+        return self._language_manager().print_by_id(message_id, **kwargs)
+
     def calculate_quantity_of_bidding_players(self):
         """Count how many players are still active in the bidding."""
         return sum(player.has_bid for player in self.players)
 
     def show_score(self):
         """Print the current score table for all players."""
-        print("-------Tabela wyników-------")
+        self._print_text(1)
         for player in self.players:
             print("-" * 20)
-            print("-", player.name, "-", player.points, "-")
+            self._print_text(2, player=player)
             print("-" * 20)
 
     def calculate_starting_player(self):
@@ -56,7 +76,7 @@ class Game():
     def draw_player(self):
         """Select a random player to start the game."""
         player = random.choice(self.players)
-        print(f"Gre rozpoczyna: {player.name}")
+        self._print_text(3, player=player)
         return player
 
     def calculate_bidding_player(self):
@@ -74,7 +94,7 @@ class Game():
 
     def show_threecards(self):
         """Display the three cards in the center."""
-        print(f"\nOsoba, ktora wygrala licytacje dostaje karty: {' '.join([card.name for card in self.threecards])}")
+        self._print_text(4, cards=' '.join([card.name for card in self.threecards]))
 
     def check_winner(self):
         """Return whether any player has exceeded the points threshold to win."""
@@ -86,7 +106,7 @@ class Game():
         if ENABLE_DATA_COLLECTION:
             self.gamerecorder.record_start_game(self.get_players_data(), {" ".join([card.name for card in self.threecards])})
 
-        print("Zaczynamy licytacje")
+        self._print_text(5)
 
         self.bidding_player = self.calculate_bidding_player()
         self.players[self.bidding_player].bidding_score = INITIAL_BID  # set initial bid to 100
@@ -116,7 +136,9 @@ class Game():
 
         winner = self.calculate_starting_player()
         self.start_trick = winner
-        print(f"{SEPARATOR}\nGre rozpocznie {winner.name}, musi ugrać {self.highest_bid()}\n{SEPARATOR}")
+        print(SEPARATOR)
+        self._print_text(6, winner=winner, highest_bid=self.highest_bid())
+        print(SEPARATOR)
         self.show_threecards()
         self.bid_winner_takes_threecards(winner)
         winner.deal_one_card_each(self.players, winner)
@@ -125,7 +147,9 @@ class Game():
         if ENABLE_DATA_COLLECTION:
             self.gamerecorder.record_turn(self.get_players_data())
 
-        print(f"{SEPARATOR}\n Zaczynamy grę \n{SEPARATOR}")
+        print(SEPARATOR)
+        self._print_text(7)
+        print(SEPARATOR)
 
     def trick_winner(self, turn: Turn) -> Player:
         """Return the player who wins the current trick."""
@@ -140,7 +164,7 @@ class Game():
 
     def round(self):
         """Play one full round of turns for all players."""
-        print('Rozpoczynamy ture')
+        self._print_text(8)
         marriage = None
         for i in range(TOTAL_TURNS):
             n_turn = Turn(i + 1, {}, None, marriage)
@@ -155,7 +179,7 @@ class Game():
                 if ENABLE_DATA_COLLECTION: gm_helper[start_player.name] = played_card.name
 
                 if store_marriage:
-                    print(SEPARATOR + f"\n Rzucil meldunek {played_card.color} \n " + SEPARATOR)
+                    self._print_text(41, color=played_card.color)
                     marriage = played_card.color
                 if j == 0:
                     n_turn.color = played_card.color
@@ -166,12 +190,12 @@ class Game():
                 self.gamerecorder.record_turn({i: gm_helper})
 
             trick_winner = self.trick_winner(n_turn)
-            print(f"Ture wygrywa {trick_winner.name}")
+            self._print_text(9, trick_winner=trick_winner)
             trick_winner.winned_tricks.append([card for card in n_turn.shift.values()])
             self.start_trick = trick_winner
 
         for player in self.players:
-            print(player.name, "punkty", player.calculate_round_score())
+            self._print_text(10, player=player, round_score=player.calculate_round_score())
         self.end_round()
         self.show_score()
 
@@ -204,7 +228,7 @@ class Game():
         if self.check_winner():
             for player in self.players:
                 if player.get_points() >= POINTS_TO_WIN:
-                    print(f"koniec gry, GRE WYGRYWA {player.name}")
+                    self._print_text(11, player=player)
                     self.show_score()
                     sys.exit()
 

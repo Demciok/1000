@@ -4,6 +4,7 @@ from models.player import Player
 from models.deck import Deck
 from models.card import Card
 from models.turn import Turn
+import random
 
 @pytest.fixture
 def deck():
@@ -177,3 +178,257 @@ def test_check_winner(game):
     game.players[0].points = 1010
 
     assert game.check_winner()
+
+
+# ──────────────────────────────────────────────
+# CASE 6 – wszyscy grają w kolor wiodący (trefl), brak atutu
+# Wygrywa gracz z najwyższą kartą koloru wiodącego
+# ──────────────────────────────────────────────
+def test_trick_winner_casetest6(game):
+    [k1, k2, k3] = [
+        Card("trefl", "10", "10", "żołądź"),
+        Card("trefl", "A",  "11", "żołądź"),
+        Card("trefl", "K",  "4",  "żołądź"),
+    ]
+
+    test_turn = Turn(
+        4,
+        {
+            game.players[0]: k1,
+            game.players[1]: k2,
+            game.players[2]: k3,
+        },
+        "trefl",
+        None,
+    )
+
+    assert game.trick_winner(test_turn) == game.players[1]
+
+
+# ──────────────────────────────────────────────
+# CASE 7 – atut (trefl) bije kolor wiodący (karo)
+# Tylko jeden gracz zagrał atutem – on wygrywa
+# ──────────────────────────────────────────────
+def test_trick_winner_casetest7(game):
+    [k1, k2, k3] = [
+        Card("karo",  "A",  "11", "dzwonek"),
+        Card("karo",  "10", "10", "dzwonek"),
+        Card("trefl", "9",  "0",  "żołądź"),
+    ]
+
+    test_turn = Turn(
+        5,
+        {
+            game.players[0]: k1,
+            game.players[1]: k2,
+            game.players[2]: k3,
+        },
+        "karo",
+        "trefl",
+    )
+
+    assert game.trick_winner(test_turn) == game.players[2]
+
+
+# ──────────────────────────────────────────────
+# CASE 8 – dwa atuty (kier), wygrywa wyższy atut
+# Kolor wiodący: pik, atut: kier
+# ──────────────────────────────────────────────
+def test_trick_winner_casetest8(game):
+    [k1, k2, k3] = [
+        Card("pik",  "A",  "11", "wino"),
+        Card("kier", "9",  "0",  "czerwo"),
+        Card("kier", "J",  "2",  "czerwo"),
+    ]
+
+    test_turn = Turn(
+        6,
+        {
+            game.players[0]: k1,
+            game.players[1]: k2,
+            game.players[2]: k3,
+        },
+        "pik",
+        "kier",
+    )
+
+    assert game.trick_winner(test_turn) == game.players[2]
+
+
+# ──────────────────────────────────────────────
+# CASE 9 – mieszane kolory, brak atutu (None)
+# Karty: karo, pik, trefl – wygrywa najwyższa karta koloru wiodącego (karo)
+# ──────────────────────────────────────────────
+def test_trick_winner_casetest9(game):
+    [k1, k2, k3] = [
+        Card("karo",  "Q",  "3",  "dzwonek"),
+        Card("pik",   "A",  "11", "wino"),
+        Card("trefl", "A",  "11", "żołądź"),
+    ]
+
+    test_turn = Turn(
+        7,
+        {
+            game.players[0]: k1,
+            game.players[1]: k2,
+            game.players[2]: k3,
+        },
+        "karo",
+        None,
+    )
+
+    # Gracze 1 i 2 nie zagrali koloru wiodącego – wygrywa gracz[0]
+    assert game.trick_winner(test_turn) == game.players[0]
+
+
+# ──────────────────────────────────────────────
+# CASE 10 – atut (karo) vs atut (karo), wyższy wygrywa
+# Kolor wiodący: trefl, obaj rywale dorzucili atuty
+# ──────────────────────────────────────────────
+def test_trick_winner_casetest10(game):
+    [k1, k2, k3] = [
+        Card("trefl", "K",  "4",  "żołądź"),
+        Card("karo",  "10", "10", "dzwonek"),
+        Card("karo",  "A",  "11", "dzwonek"),
+    ]
+
+    test_turn = Turn(
+        8,
+        {
+            game.players[0]: k1,
+            game.players[1]: k2,
+            game.players[2]: k3,
+        },
+        "trefl",
+        "karo",
+    )
+
+    assert game.trick_winner(test_turn) == game.players[2]
+
+
+# ──────────────────────────────────────────────
+# CASE 11 – atut (pik) dorzucony jako jedyny
+# Kolor wiodący: kier, meldunek: pik
+# ──────────────────────────────────────────────
+def test_trick_winner_casetest11(game):
+    [k1, k2, k3] = [
+        Card("kier", "A",  "11", "czerwo"),
+        Card("pik",  "9",  "0",  "wino"),
+        Card("kier", "10", "10", "czerwo"),
+    ]
+
+    test_turn = Turn(
+        9,
+        {
+            game.players[0]: k1,
+            game.players[1]: k2,
+            game.players[2]: k3,
+        },
+        "kier",
+        "pik",
+    )
+
+    assert game.trick_winner(test_turn) == game.players[1]
+
+
+# ══════════════════════════════════════════════
+# TESTY Z LOSOWYMI DANYMI
+# ══════════════════════════════════════════════
+
+KOLORY   = ["kier", "karo", "pik", "trefl"]
+SYMBOLE  = ["kier", "karo", "pik", "trefl"]  # nazwy graficzne (możesz dostosować)
+FIGURY   = ["9", "J", "Q", "K", "10", "A"]
+PUNKTY   = {"9": "0", "J": "2", "Q": "3", "K": "4", "10": "10", "A": "11"}
+GRAFIKI  = {"kier": "czerwo", "karo": "dzwonek", "pik": "wino", "trefl": "żołądź"}
+WARTOSCI = {"9": 0, "J": 2, "Q": 3, "K": 4, "10": 10, "A": 11}
+
+
+def _losowa_karta(kolor):
+    figure = random.choice(FIGURY)
+    return Card(kolor, figure, PUNKTY[figure], GRAFIKI[kolor])
+
+
+def _wyznacz_zwyciezce(karty_graczy, kolor_wiodacy, atut):
+    """
+    Pomocnicza funkcja odtwarzająca logikę trick_winner –
+    służy do obliczenia oczekiwanego wyniku w losowych testach.
+    """
+    gracze = list(karty_graczy.keys())
+    karty  = list(karty_graczy.values())
+
+    # Zbierz atuty (jeśli są)
+    if atut:
+        atuty = [(i, karty[i]) for i in range(3) if karty[i].color == atut]
+        if atuty:
+            winner_idx = max(atuty, key=lambda x: WARTOSCI[x[1].figure])[0]
+            return gracze[winner_idx]
+
+    # Brak atutów – wygrywa najwyższa karta koloru wiodącego
+    wiodace = [(i, karty[i]) for i in range(3) if karty[i].color == kolor_wiodacy]
+    winner_idx = max(wiodace, key=lambda x: WARTOSCI[x[1].figure])[0]
+    return gracze[winner_idx]
+
+
+def test_trick_winner_random_no_trump(game):
+    """Losowy test – wszyscy grają w ten sam kolor, brak atutu."""
+    random.seed()  # prawdziwa losowość przy każdym uruchomieniu
+    kolor_wiodacy = random.choice(KOLORY)
+
+    karty = [_losowa_karta(kolor_wiodacy) for _ in range(3)]
+    karty_graczy = {
+        game.players[0]: karty[0],
+        game.players[1]: karty[1],
+        game.players[2]: karty[2],
+    }
+
+    test_turn = Turn(
+        10,
+        karty_graczy,
+        kolor_wiodacy,
+        None,
+    )
+
+    oczekiwany = _wyznacz_zwyciezce(karty_graczy, kolor_wiodacy, None)
+
+    print(
+        f"\n[RANDOM no-trump] wiodący={kolor_wiodacy} | "
+        + " | ".join(f"p{i}: {karty[i].figure}" for i in range(3))
+        + f" | winner=players[{list(game.players).index(oczekiwany)}]"
+    )
+
+    assert game.trick_winner(test_turn) == oczekiwany
+
+
+def test_trick_winner_random_with_trump(game):
+    """Losowy test – kolor wiodący i atut są różne; co najmniej jeden gracz zagrywa atutem."""
+    random.seed()
+    kolor_wiodacy = random.choice(KOLORY)
+    atut = random.choice([k for k in KOLORY if k != kolor_wiodacy])
+
+    # Gracz 0: kolor wiodący, gracz 1: losowy (może atut), gracz 2: atut
+    k0 = _losowa_karta(kolor_wiodacy)
+    k1 = _losowa_karta(random.choice([kolor_wiodacy, atut]))
+    k2 = _losowa_karta(atut)
+
+    karty_graczy = {
+        game.players[0]: k0,
+        game.players[1]: k1,
+        game.players[2]: k2,
+    }
+
+    test_turn = Turn(
+        11,
+        karty_graczy,
+        kolor_wiodacy,
+        atut,
+    )
+
+    oczekiwany = _wyznacz_zwyciezce(karty_graczy, kolor_wiodacy, atut)
+
+    print(
+        f"\n[RANDOM with-trump] wiodący={kolor_wiodacy} atut={atut} | "
+        f"p0: {k0.color}/{k0.figure} | p1: {k1.color}/{k1.figure} | p2: {k2.color}/{k2.figure}"
+        + f" | winner=players[{list(game.players).index(oczekiwany)}]"
+    )
+
+    assert game.trick_winner(test_turn) == oczekiwany
