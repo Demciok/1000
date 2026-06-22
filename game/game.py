@@ -4,6 +4,7 @@ from models.player import Player
 import sys
 from data import gamerecorder
 from models.languagemanager import LanguageManager
+from models.excelLogger import ExcelLogger # fastest win implementation
 
 
 POINTS_TO_WIN = 1000
@@ -230,12 +231,10 @@ class Game():
                 if player.get_points() >= POINTS_TO_WIN:
                     self._print_text(11, player=player)
                     self.show_score()
+                    excel_logger = ExcelLogger()
+                    excel_logger.log_win(player.name, self.round_number, player.get_points())
                     sys.exit()
 
         # Game recording
         if ENABLE_DATA_COLLECTION:
             self.gamerecorder.save_round()
-
-    def zapisz_stan_gry(self):
-        """Placeholder for saving the current game state."""
-        pass

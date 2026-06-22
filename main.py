@@ -57,7 +57,7 @@ def setup_new_game():
         Player2 = Player(random_player_name(),lm,0) 
         Player3 = Player(random_player_name(),lm,0) 
     else:
-        Player1 = Player("czlowiek",lm,0) 
+        Player1 = Bot("czlowiek",lm,0) 
         Player2 = Bot("Claude",lm,0)
         Player3 = Bot("Gemini",lm,0)
 
