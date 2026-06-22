@@ -16,6 +16,7 @@ Welcome to a digital version of the classic Polish card game from the PRL era ca
 - [Future Updates](#future-updates)
 - [Contributing](#contributing)
 - [License](#license)
+- [Sphinx](#sphinx)
 
 ## Game Flow
 
@@ -120,6 +121,28 @@ Educational project - pull requests welcome!
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## Sphinx 
+
+This project uses [Sphinx](https://www.sphinx-doc.org/) to automatically generate documentation from docstrings in the source code. It allows you to keep your documentation always in sync with the codebase without writing it manually.
+
+### How to generate
+
+1. Install Sphinx:
+```bash
+pip install sphinx
+```
+
+2. Generate the source files:
+```bash
+sphinx-apidoc -o . .
+```
+
+3. Build the HTML documentation:
+```bash
+sphinx-build -b html . <output_folder>
+```
+
 
 ## License
 
