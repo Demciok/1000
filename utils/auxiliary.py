@@ -42,7 +42,7 @@ def name_a_player(language=None):
 
 def choose_language(language=None):
     lm = _language_manager(language or "pl")
-    lan = lm.input_by_id(40)
-    while lan not in ["pl", "en"]:
+    lan = input("Choose language (pl/en/zh): ")
+    while lan not in ["pl", "en", "zh"]:
         lan = lm.input_by_id(40)
     return str(lan)
