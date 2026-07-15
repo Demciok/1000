@@ -154,14 +154,18 @@ class Game():
 
     def trick_winner(self, turn: Turn) -> Player:
         """Return the player who wins the current trick."""
-        players_with_color = {
+        players_with_marriage_color = {
             player: card for player, card in turn.shift.items()
             if card.color == turn.marriage_color
         }
-        if not players_with_color:
-            return max(turn.shift, key=lambda g: turn.shift[g].value)
-        winner = max(players_with_color, key=lambda g: players_with_color[g].value)
-        return winner
+        if players_with_marriage_color:
+            return max(players_with_marriage_color, key=lambda g: players_with_marriage_color[g].value)
+
+        players_with_led_color = {
+            player: card for player, card in turn.shift.items()
+            if card.color == turn.color
+        }
+        return max(players_with_led_color, key=lambda g: players_with_led_color[g].value)
 
     def round(self):
         """Play one full round of turns for all players."""
