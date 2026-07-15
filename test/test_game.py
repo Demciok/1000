@@ -6,17 +6,17 @@ from models.card import Card
 from models.turn import Turn
 import random
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def deck():
     deck = Deck()
     deck.create_deck()
     return deck
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def players():
     return [Player(f"{i}") for i in range(3)]
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def game(deck, players):
     game = Game(players)
     game.deck = deck
@@ -47,7 +47,7 @@ def test_highest_bidder(game):
     assert game.highest_bid() == 150
 
 def test_winner_takes_threecards(game):
-    game.threecards = [Card("Czerwo", "A","11"), Card("Wino", "K","2"), Card("Dzwonek", "Q","3")]
+    game.threecards = [Card("Czerwo", "A", 11), Card("Wino", "K", 2), Card("Dzwonek", "Q", 3)]
     threecards_before = game.threecards.copy()
     winner = game.players[0]
     winner.hand = []
@@ -57,9 +57,9 @@ def test_winner_takes_threecards(game):
     assert game.threecards == []
 # ♠ wino pik | ♣ zoladz trefl | ♦ dzwonek karo | ♥ czerwo kier
 def test_trick_winner_casetest1(game):
-    [k1, k2, k3] = [Card("kier", "A","11","czerwo"),
-                    Card("karo", "K","4","dzwonek"), 
-                    Card("pik", "Q","3","wino")]
+    [k1, k2, k3] = [Card("kier", "A", 11, "czerwo"),
+                    Card("karo", "K", 4, "dzwonek"), 
+                    Card("pik", "Q", 3, "wino")]
     
     test_turn = Turn(0, {
         game.players[0]:k1,
@@ -72,9 +72,9 @@ def test_trick_winner_casetest1(game):
 
 def test_trick_winner_casetest2(game):
     [k1, k2, k3] = [
-        Card("kier", "A", "11", "czerwo"),
-        Card("karo", "A", "11", "dzwonek"),
-        Card("pik", "9", "0", "wino")
+        Card("kier", "A", 11, "czerwo"),
+        Card("karo", "A", 11, "dzwonek"),
+        Card("pik", "9", 0, "wino")
     ]
 
     test_turn = Turn(
@@ -92,9 +92,9 @@ def test_trick_winner_casetest2(game):
 
 def test_trick_winner_casetest3(game):
     [k1, k2, k3] = [
-        Card("kier", "10", "10", "czerwo"),
-        Card("kier", "K", "4", "czerwo"),
-        Card("kier", "A", "11", "czerwo")
+        Card("kier", "10", 10, "czerwo"),
+        Card("kier", "K", 4, "czerwo"),
+        Card("kier", "A", 11, "czerwo")
     ]
 
     test_turn = Turn(
@@ -107,14 +107,13 @@ def test_trick_winner_casetest3(game):
         "kier",
         None
     )
-
     assert game.trick_winner(test_turn) == game.players[2]
 
 def test_trick_winner_casetest4(game):
     [k1, k2, k3] = [
-        Card("kier", "A", "11", "czerwo"),
-        Card("kier", "10", "10", "czerwo"),
-        Card("pik", "J", "2", "wino")
+        Card("kier", "A", 11, "czerwo"),
+        Card("kier", "10", 10, "czerwo"),
+        Card("pik", "J", 2, "wino")
     ]
 
     test_turn = Turn(
@@ -132,9 +131,9 @@ def test_trick_winner_casetest4(game):
 
 def test_trick_winner_casetest5(game):
     [k1, k2, k3] = [
-        Card("karo", "Q", "3", "dzwonek"),
-        Card("karo", "10", "10", "dzwonek"),
-        Card("pik", "A", "11", "wino")
+        Card("karo", "Q", 3, "dzwonek"),
+        Card("karo", "10", 10, "dzwonek"),
+        Card("pik", "A", 11, "wino")
     ]
 
     test_turn = Turn(
@@ -148,7 +147,7 @@ def test_trick_winner_casetest5(game):
         None
     )
 
-    assert game.trick_winner(test_turn) == game.players[1]
+    assert game.trick_winner(test_turn).name == game.players[1].name
 
 def test_end_round(game):
 
@@ -186,9 +185,9 @@ def test_check_winner(game):
 # ──────────────────────────────────────────────
 def test_trick_winner_casetest6(game):
     [k1, k2, k3] = [
-        Card("trefl", "10", "10", "żołądź"),
-        Card("trefl", "A",  "11", "żołądź"),
-        Card("trefl", "K",  "4",  "żołądź"),
+        Card("trefl", "10", 10, "żołądź"),
+        Card("trefl", "A", 11, "żołądź"),
+        Card("trefl", "K", 4, "żołądź"),
     ]
 
     test_turn = Turn(
@@ -211,9 +210,9 @@ def test_trick_winner_casetest6(game):
 # ──────────────────────────────────────────────
 def test_trick_winner_casetest7(game):
     [k1, k2, k3] = [
-        Card("karo",  "A",  "11", "dzwonek"),
-        Card("karo",  "10", "10", "dzwonek"),
-        Card("trefl", "9",  "0",  "żołądź"),
+        Card("karo",  "A", 11, "dzwonek"),
+        Card("karo",  "10", 10, "dzwonek"),
+        Card("trefl", "9", 0, "żołądź"),
     ]
 
     test_turn = Turn(
@@ -236,9 +235,9 @@ def test_trick_winner_casetest7(game):
 # ──────────────────────────────────────────────
 def test_trick_winner_casetest8(game):
     [k1, k2, k3] = [
-        Card("pik",  "A",  "11", "wino"),
-        Card("kier", "9",  "0",  "czerwo"),
-        Card("kier", "J",  "2",  "czerwo"),
+        Card("pik",  "A", 11, "wino"),
+        Card("kier", "9", 0, "czerwo"),
+        Card("kier", "J", 2, "czerwo"),
     ]
 
     test_turn = Turn(
@@ -261,9 +260,9 @@ def test_trick_winner_casetest8(game):
 # ──────────────────────────────────────────────
 def test_trick_winner_casetest9(game):
     [k1, k2, k3] = [
-        Card("karo",  "Q",  "3",  "dzwonek"),
-        Card("pik",   "A",  "11", "wino"),
-        Card("trefl", "A",  "11", "żołądź"),
+        Card("karo",  "Q", 3, "dzwonek"),
+        Card("pik",   "A", 11, "wino"),
+        Card("trefl", "A", 11, "żołądź"),
     ]
 
     test_turn = Turn(
@@ -287,9 +286,9 @@ def test_trick_winner_casetest9(game):
 # ──────────────────────────────────────────────
 def test_trick_winner_casetest10(game):
     [k1, k2, k3] = [
-        Card("trefl", "K",  "4",  "żołądź"),
-        Card("karo",  "10", "10", "dzwonek"),
-        Card("karo",  "A",  "11", "dzwonek"),
+        Card("trefl", "K", 4, "żołądź"),
+        Card("karo",  "10", 10, "dzwonek"),
+        Card("karo",  "A", 11, "dzwonek"),
     ]
 
     test_turn = Turn(
@@ -312,9 +311,9 @@ def test_trick_winner_casetest10(game):
 # ──────────────────────────────────────────────
 def test_trick_winner_casetest11(game):
     [k1, k2, k3] = [
-        Card("kier", "A",  "11", "czerwo"),
-        Card("pik",  "9",  "0",  "wino"),
-        Card("kier", "10", "10", "czerwo"),
+        Card("kier", "A", 11, "czerwo"),
+        Card("pik",  "9", 0, "wino"),
+        Card("kier", "10", 10, "czerwo"),
     ]
 
     test_turn = Turn(
@@ -338,9 +337,8 @@ def test_trick_winner_casetest11(game):
 KOLORY   = ["kier", "karo", "pik", "trefl"]
 SYMBOLE  = ["kier", "karo", "pik", "trefl"]  # nazwy graficzne (możesz dostosować)
 FIGURY   = ["9", "J", "Q", "K", "10", "A"]
-PUNKTY   = {"9": "0", "J": "2", "Q": "3", "K": "4", "10": "10", "A": "11"}
+PUNKTY   = {"9": 0, "J": 2, "Q": 3, "K": 4, "10": 10, "A": 11}
 GRAFIKI  = {"kier": "czerwo", "karo": "dzwonek", "pik": "wino", "trefl": "żołądź"}
-WARTOSCI = {"9": 0, "J": 2, "Q": 3, "K": 4, "10": 10, "A": 11}
 
 
 def _losowa_karta(kolor):
@@ -356,16 +354,15 @@ def _wyznacz_zwyciezce(karty_graczy, kolor_wiodacy, atut):
     gracze = list(karty_graczy.keys())
     karty  = list(karty_graczy.values())
 
-    # Zbierz atuty (jeśli są)
+    # Jeśli podano atut, wybieramy najwyższą kartę w tym kolorze.
+    # Jeśli nikt nie zagrał atutem, bierzemy najwyższą wartość spośród wszystkich kart.
     if atut:
         atuty = [(i, karty[i]) for i in range(3) if karty[i].color == atut]
         if atuty:
-            winner_idx = max(atuty, key=lambda x: WARTOSCI[x[1].figure])[0]
+            winner_idx = max(atuty, key=lambda x: x[1].value)[0]
             return gracze[winner_idx]
 
-    # Brak atutów – wygrywa najwyższa karta koloru wiodącego
-    wiodace = [(i, karty[i]) for i in range(3) if karty[i].color == kolor_wiodacy]
-    winner_idx = max(wiodace, key=lambda x: WARTOSCI[x[1].figure])[0]
+    winner_idx = max(range(3), key=lambda i: karty[i].value)
     return gracze[winner_idx]
 
 

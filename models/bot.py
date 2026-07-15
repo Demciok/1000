@@ -62,6 +62,18 @@ class Bot(BasePlayer):
         marriage_points = self.sum_marriages_points()
         score += marriage_points
 
+        # set z wszystkich kolorow w lapie
+        uniq_colors = set(card.color for card in self.hand)
+        for u_color in uniq_colors:
+            quantity = sum(1 for card in self.hand if card.color == u_color)
+            if quantity == 5:
+                score += 50
+            if quantity == 6:
+                score += 100
+        # sumowanie po wszystkich kolorach 
+        # jezeli jakis kolor < 5 to dodajesz 50
+        # jezeli jakis kolor < 6 to dodajesz 100
+
         for card in self.hand:
             if card.value == 11:  # Ace
                 score += 15
@@ -84,6 +96,10 @@ class Bot(BasePlayer):
 
     def check_shift(self, t_parm):
         """Choose the best card to play when following suit."""
+        # jak wchodzi do tej funkcji to jego reka zamienia sia na reke kart ktora moze wyrzucic
+        # na koniec jak juz wyjdzie wraca do starej reki a wybrana karta z reki z ktorej moze wyrzucic jest odrzucana z glownej reki
+        # reka kart ktora moze wyrzucic to jezeli pierwszy gracz wyrzucil jakis kolor to on musi wyrzucic w kolorze jezeli ma
+        # jezeli nie ma to rzuca co chce 
         cards_in_color = self.check_color(t_parm.color)
         if len(cards_in_color) > 0:
             if self.marriage_in_threecards(t_parm):

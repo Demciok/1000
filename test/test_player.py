@@ -3,6 +3,7 @@ from models.player import Player
 from models.card import Card
 from models.turn import Turn
 from unittest.mock import patch
+import copy
 
 @pytest.fixture
 def player():
@@ -20,7 +21,7 @@ predefinied_test_set=  [Card("kier", "A", 11, "czerwo"),
             Card("pik", "Q", 3, "wino")]
 
 def test_play_card_correct(player):
-    player.hand = predefinied_test_set
+    player.hand = copy.copy(predefinied_test_set)
     test_turn = Turn(1,{},None,None)
     with patch("builtins.input", return_value="0"):
         played_card, points = player.play_card(test_turn)
@@ -28,7 +29,7 @@ def test_play_card_correct(player):
         assert played_card.color == "kier"
 
 def test_play_card_wrong_then_correct(player):
-    player.hand = predefinied_test_set
+    player.hand = copy.copy(predefinied_test_set)
     test_turn = Turn(1,{},None,None)
     with patch("builtins.input", side_effect=["abd","DOASIFJFOIAJ","940328940","-2","2"]):
         played_card, points = player.play_card(test_turn)
@@ -57,7 +58,7 @@ def test_player_bid_no(player):
 
 def test_player_deal_one_card_each(player):
     other_players = [Player("P2"), Player("P3")]
-    player.hand = predefinied_test_set
+    player.hand = copy.copy(predefinied_test_set)
     with patch("builtins.input", side_effect=["abd","0","0"]):
         player.deal_one_card_each(other_players, player)
         assert len(player.hand) == 1

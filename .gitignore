@@ -8,3 +8,4 @@ savegame.pkl
 .pytest_cache/
 test/test_MCTS.py
 *.rst
+fastest_wins.xlsx
