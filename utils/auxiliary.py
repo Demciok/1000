@@ -1,5 +1,6 @@
 import random
 from pathlib import Path
+from models.languagemanager import LanguageManager
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 NICKS_PATH = BASE_DIR / 'resources' / 'nicks.txt'
@@ -13,13 +14,20 @@ MARRIAGE = {
     "czerwo": 100
 }
 
-def pick_game_mode():
+
+def _language_manager(language="pl"):
+    if isinstance(language, LanguageManager):
+        return language
+    return LanguageManager(language)
+
+def pick_game_mode(language=None):
     """Prompt the user to choose the game mode."""
-    print("Witaj w grze w 1000, gra karciana pochodząca z PRL-U")
-    print("Mam nadzieje że zasady już znasz teraz wybierz")
-    tryb = input("Tryb z botami - 0 tryb z graczami - 1: ")
+    lm = _language_manager(language or "pl")
+    lm.print_by_id(28)
+    lm.print_by_id(29)
+    tryb = lm.input_by_id(37)
     while tryb not in ["0", "1"]:
-        tryb = input("Zly wybor wybierz 0- tryb z botami, 1 - tryb z graczami: ")
+        tryb = lm.input_by_id(38)
     return int(tryb)
 
 def random_player_name():
@@ -27,6 +35,14 @@ def random_player_name():
     with open(NICKS_PATH) as f:
         return random.choice(f.readlines())
 
-def name_a_player():
+def name_a_player(language=None):
     """Ask the user for a player name."""
-    return str(input("Wybierz nazwe dla gracza"))
+    return str(_language_manager(language or "pl").input_by_id(39))
+
+
+def choose_language(language=None):
+    lm = _language_manager(language or "pl")
+    lan = input("Choose language (pl/en/zh): ")
+    while lan not in ["pl", "en", "zh"]:
+        lan = lm.input_by_id(40)
+    return str(lan)

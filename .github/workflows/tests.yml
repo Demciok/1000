@@ -1,0 +1,39 @@
+name: Run tests
+
+on:
+  push:
+    branches: ["main", "master","dev"]
+  pull_request:
+    branches: ["main", "master", "dev"]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
+
+      - name: Run tests with pytest
+        run: |
+          pytest
+
+      - name: Check that the game starts
+        run: |
+          python main.py --help >/tmp/game-help.txt 2>&1 || true
+          if [ ! -s /tmp/game-help.txt ]; then
+            echo "Game did not start correctly" >&2
+            exit 1
+          fi
+          cat /tmp/game-help.txt

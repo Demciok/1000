@@ -1,0 +1,623 @@
+{
+  "pl": [
+    {
+      "id": 1,
+      "type": "print",
+      "class": "Game",
+      "method": "show_score",
+      "text": "-------Tabela wyników-------"
+    },
+    {
+      "id": 2,
+      "type": "print",
+      "class": "Game",
+      "method": "show_score",
+      "text": "{player.name} - {player.points}"
+    },
+    {
+      "id": 3,
+      "type": "print",
+      "class": "Game",
+      "method": "draw_player",
+      "text": "Gre rozpoczyna: {player.name}"
+    },
+    {
+      "id": 4,
+      "type": "print",
+      "class": "Game",
+      "method": "show_threecards",
+      "text": "Osoba, ktora wygrala licytacje dostaje karty: {cards}"
+    },
+    {
+      "id": 5,
+      "type": "print",
+      "class": "Game",
+      "method": "auction",
+      "text": "Zaczynamy licytacje"
+    },
+    {
+      "id": 6,
+      "type": "print",
+      "class": "Game",
+      "method": "auction",
+      "text": "Gre rozpocznie {winner.name}, musi ugrać {highest_bid}"
+    },
+    {
+      "id": 7,
+      "type": "print",
+      "class": "Game",
+      "method": "auction",
+      "text": "Zaczynamy gre"
+    },
+    {
+      "id": 8,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Rozpoczynamy ture"
+    },
+    {
+      "id": 9,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Ture wygrywa {trick_winner.name}"
+    },
+    {
+      "id": 10,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "{player.name} punkty {round_score}"
+    },
+    {
+      "id": 11,
+      "type": "print",
+      "class": "Game",
+      "method": "end_round",
+      "text": "koniec gry, GRE WYGRYWA {player.name}"
+    },
+    {
+      "id": 12,
+      "type": "print",
+      "class": "Bot",
+      "method": "bid",
+      "text": "Bot: {bot.name} podbija stawke !"
+    },
+    {
+      "id": 13,
+      "type": "print",
+      "class": "Bot",
+      "method": "bid",
+      "text": "Bot: {bot.name} konczy licytacje"
+    },
+    {
+      "id": 14,
+      "type": "print",
+      "class": "Bot",
+      "method": "play_card",
+      "text": "{bot.name} rzuca {card.name}"
+    },
+    {
+      "id": 15,
+      "type": "print",
+      "class": "Bot",
+      "method": "deal_one_card_each",
+      "text": "{bot.name} daje {picked} graczu {recipient.name}"
+    },
+    {
+      "id": 16,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Twoja reka tak się prezentuje"
+    },
+    {
+      "id": 17,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Czerwa: {cards}"
+    },
+    {
+      "id": 18,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Dzwonki: {cards}"
+    },
+    {
+      "id": 19,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Zoladzie: {cards}"
+    },
+    {
+      "id": 20,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Wina: {cards}"
+    },
+    {
+      "id": 21,
+      "type": "print",
+      "class": "Player",
+      "method": "bid",
+      "text": "Graczu: {player.name}"
+    },
+    {
+      "id": 22,
+      "type": "print",
+      "class": "Player",
+      "method": "bid",
+      "text": "Trwa licytacja, podbijasz stawkę o 10? Obecna najwyższa stawka {current_rate}"
+    },
+    {
+      "id": 23,
+      "type": "print",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Musisz dać jedną kartę każdemu przeciwnikowi"
+    },
+    {
+      "id": 24,
+      "type": "print",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Niepoprawny numer karty. Spróbuj ponownie."
+    },
+    {
+      "id": 25,
+      "type": "print",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Wprowadź liczbę całkowitą!"
+    },
+    {
+      "id": 26,
+      "type": "print",
+      "class": "main",
+      "method": "save_game",
+      "text": "Zapisano gre"
+    },
+    {
+      "id": 27,
+      "type": "print",
+      "class": "main",
+      "method": "load_game",
+      "text": "Wczytano gre!"
+    },
+    {
+      "id": 28,
+      "type": "print",
+      "class": "auxiliary",
+      "method": "print_welcome",
+      "text": "Witaj w grze w 1000, gra karciana pochodząca z PRL-U"
+    },
+    {
+      "id": 29,
+      "type": "print",
+      "class": "auxiliary",
+      "method": "print_welcome",
+      "text": "Mam nadzieje że zasady już znasz teraz wybierz"
+    },
+    {
+      "id": 30,
+      "type": "input",
+      "class": "Player",
+      "method": "play_card",
+      "text": "Podaj numer karty, którą chcesz wyrzucić (od 0 do {max_index}): "
+    },
+    {
+      "id": 31,
+      "type": "input",
+      "class": "Player",
+      "method": "play_card",
+      "text": "Zły wybór. Wybierz kartę (od 0 do {max_index}): "
+    },
+    {
+      "id": 32,
+      "type": "input",
+      "class": "Player",
+      "method": "play_card",
+      "text": "Nie możesz rzucić innego koloru niż {color}. Wybierz {choices}: "
+    },
+    {
+      "id": 33,
+      "type": "input",
+      "class": "Player",
+      "method": "bid",
+      "text": "Dokonaj wyboru 1/0 (1 - podbijam, 0 - kończę): "
+    },
+    {
+      "id": 34,
+      "type": "input",
+      "class": "Player",
+      "method": "bid",
+      "text": "Zły wybór, wybierz poprawnie (1/0): "
+    },
+    {
+      "id": 35,
+      "type": "input",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Wybierz numer karty do oddania graczowi {opponent.name}: "
+    },
+    {
+      "id": 36,
+      "type": "input",
+      "class": "main",
+      "method": "load_game",
+      "text": "Znaleziono zapisany stan gry! Czy chcesz kontynuować? (t/n): "
+    },
+    {
+      "id": 37,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_mode",
+      "text": "Tryb z botami - 0 tryb z graczami - 1: "
+    },
+    {
+      "id": 38,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_mode",
+      "text": "Zły wybor wybierz 0- tryb z botami, 1 - tryb z graczami: "
+    },
+    {
+      "id": 39,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_name",
+      "text": "Wybierz nazwe dla gracza"
+    },
+    {
+      "id": 40,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_language",
+      "text": "Choose language (pl/en): "
+    },
+    {
+      "id": 41,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Rzucil meldunek {color}"
+    }
+  ],
+  "en": [
+    {
+      "id": 1,
+      "type": "print",
+      "class": "Game",
+      "method": "show_score",
+      "text": "-------Scoreboard-------"
+    },
+    {
+      "id": 2,
+      "type": "print",
+      "class": "Game",
+      "method": "show_score",
+      "text": "{player.name} - {player.points}"
+    },
+    {
+      "id": 3,
+      "type": "print",
+      "class": "Game",
+      "method": "draw_player",
+      "text": "The game is started by: {player.name}"
+    },
+    {
+      "id": 4,
+      "type": "print",
+      "class": "Game",
+      "method": "show_threecards",
+      "text": "The auction winner receives these cards: {cards}"
+    },
+    {
+      "id": 5,
+      "type": "print",
+      "class": "Game",
+      "method": "auction",
+      "text": "Let's start the bidding"
+    },
+    {
+      "id": 6,
+      "type": "print",
+      "class": "Game",
+      "method": "auction",
+      "text": "{winner.name} will start the game and must score at least {highest_bid}"
+    },
+    {
+      "id": 7,
+      "type": "print",
+      "class": "Game",
+      "method": "auction",
+      "text": "Let's start the game"
+    },
+    {
+      "id": 8,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Starting the trick"
+    },
+    {
+      "id": 9,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "{trick_winner.name} wins the trick"
+    },
+    {
+      "id": 10,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "{player.name} points: {round_score}"
+    },
+    {
+      "id": 11,
+      "type": "print",
+      "class": "Game",
+      "method": "end_round",
+      "text": "Game over, THE WINNER IS {player.name}"
+    },
+    {
+      "id": 12,
+      "type": "print",
+      "class": "Bot",
+      "method": "bid",
+      "text": "Bot: {bot.name} raises the bid!"
+    },
+    {
+      "id": 13,
+      "type": "print",
+      "class": "Bot",
+      "method": "bid",
+      "text": "Bot: {bot.name} passes the auction"
+    },
+    {
+      "id": 14,
+      "type": "print",
+      "class": "Bot",
+      "method": "play_card",
+      "text": "{bot.name} plays {card.name}"
+    },
+    {
+      "id": 15,
+      "type": "print",
+      "class": "Bot",
+      "method": "deal_one_card_each",
+      "text": "{bot.name} gives {picked} to player {recipient.name}"
+    },
+    {
+      "id": 16,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Your hand looks like this:"
+    },
+    {
+      "id": 17,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Hearts: {cards}"
+    },
+    {
+      "id": 18,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Bells: {cards}"
+    },
+    {
+      "id": 19,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Acorns: {cards}"
+    },
+    {
+      "id": 20,
+      "type": "print",
+      "class": "Player",
+      "method": "show_cards_in_hand",
+      "text": "Leaves: {cards}"
+    },
+    {
+      "id": 21,
+      "type": "print",
+      "class": "Player",
+      "method": "bid",
+      "text": "Player: {player.name}"
+    },
+    {
+      "id": 22,
+      "type": "print",
+      "class": "Player",
+      "method": "bid",
+      "text": "Bidding is underway. Do you want to raise by 10? Current highest bid: {current_rate}"
+    },
+    {
+      "id": 23,
+      "type": "print",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "You must give one card to each opponent"
+    },
+    {
+      "id": 24,
+      "type": "print",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Invalid card number. Please try again."
+    },
+    {
+      "id": 25,
+      "type": "print",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Please enter an integer!"
+    },
+    {
+      "id": 26,
+      "type": "print",
+      "class": "main",
+      "method": "save_game",
+      "text": "Game saved"
+    },
+    {
+      "id": 27,
+      "type": "print",
+      "class": "main",
+      "method": "load_game",
+      "text": "Game loaded!"
+    },
+    {
+      "id": 28,
+      "type": "print",
+      "class": "auxiliary",
+      "method": "print_welcome",
+      "text": "Welcome to Thousand, a card game originating from the PRL era"
+    },
+    {
+      "id": 29,
+      "type": "print",
+      "class": "auxiliary",
+      "method": "print_welcome",
+      "text": "I hope you already know the rules. Now, make your choice"
+    },
+    {
+      "id": 30,
+      "type": "input",
+      "class": "Player",
+      "method": "play_card",
+      "text": "Enter the card number you want to play (0 to {max_index}): "
+    },
+    {
+      "id": 31,
+      "type": "input",
+      "class": "Player",
+      "method": "play_card",
+      "text": "Invalid choice. Choose a card (0 to {max_index}): "
+    },
+    {
+      "id": 32,
+      "type": "input",
+      "class": "Player",
+      "method": "play_card",
+      "text": "You cannot play another suit than {color}. Choose {choices}: "
+    },
+    {
+      "id": 33,
+      "type": "input",
+      "class": "Player",
+      "method": "bid",
+      "text": "Make a choice 1/0 (1 - raise, 0 - pass): "
+    },
+    {
+      "id": 34,
+      "type": "input",
+      "class": "Player",
+      "method": "bid",
+      "text": "Invalid choice, choose correctly (1/0): "
+    },
+    {
+      "id": 35,
+      "type": "input",
+      "class": "Player",
+      "method": "deal_one_card_each",
+      "text": "Choose the card number to give to player {opponent.name}: "
+    },
+    {
+      "id": 36,
+      "type": "input",
+      "class": "main",
+      "method": "load_game",
+      "text": "Saved game found! Do you want to continue? (t/n): "
+    },
+    {
+      "id": 37,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_mode",
+      "text": "Mode with bots - 0, mode with players - 1: "
+    },
+    {
+      "id": 38,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_mode",
+      "text": "Invalid choice. Choose 0 for bots mode, 1 for players mode: "
+    },
+    {
+      "id": 39,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_name",
+      "text": "Choose a name for the player"
+    },
+    {
+      "id": 40,
+      "type": "input",
+      "class": "auxiliary",
+      "method": "choose_language",
+      "text": "Choose language (pl/en): "
+    },
+    {
+      "id": 41,
+      "type": "print",
+      "class": "Game",
+      "method": "round",
+      "text": "Marriage played: {color}"
+    }
+  ],
+  "zh": [
+    {"id": 1, "text": "-------英雄们的荣耀榜-------"},
+    {"id": 2, "text": "{player.name} - {player.points} 个悲剧点数"},
+    {"id": 3, "text": "今天的祭品是: {player.name}"},
+    {"id": 4, "text": "赢得拍卖的废物获得牌: {cards}"},
+    {"id": 5, "text": "开始竞价，请准备好你们的眼泪"},
+    {"id": 6, "text": "倒霉鬼 {winner.name} 必须赢得 {highest_bid} 分，祝你好运哈哈"},
+    {"id": 7, "text": "游戏开始，愿神保佑你们"},
+    {"id": 8, "text": "新一轮开始，再次受苦吧"},
+    {"id": 9, "text": "这一轮的幸运儿是 {trick_winner.name}，其余人可以哭了"},
+    {"id": 10, "text": "{player.name} 获得了 {round_score} 个无用的点数"},
+    {"id": 11, "text": "游戏结束，人类冠军是 {player.name}，其他人可以回家睡觉了"},
+    {"id": 12, "text": "机器人 {bot.name} 提高赌注，人类颤抖吧！"},
+    {"id": 13, "text": "机器人 {bot.name} 结束竞价，人类松了口气"},
+    {"id": 14, "text": "{bot.name} 扔出了 {card.name}，就像扔垃圾一样"},
+    {"id": 15, "text": "{bot.name} 把 {picked} 送给了可怜的 {recipient.name}"},
+    {"id": 16, "text": "你的手牌，请欣赏这场灾难"},
+    {"id": 17, "text": "红心（真爱）: {cards}"},
+    {"id": 18, "text": "铃铛（钱）: {cards}"},
+    {"id": 19, "text": "橡子（松鼠的食物）: {cards}"},
+    {"id": 20, "text": "叶子（大自然）: {cards}"},
+    {"id": 21, "text": "玩家大人 {player.name}，请您驾到"},
+    {"id": 22, "text": "竞价进行中，你敢加10吗？当前最高赌注 {current_rate}，懦夫"},
+    {"id": 23, "text": "你必须给每个对手一张牌，分享你的痛苦"},
+    {"id": 24, "text": "牌号不对，你连数数都不会吗？再试一次。"},
+    {"id": 25, "text": "请输入整数！你在输入什么鬼东西！"},
+    {"id": 26, "text": "游戏已保存，你的失败被永久记录了"},
+    {"id": 27, "text": "游戏已加载，准备好继续受苦！"},
+    {"id": 28, "text": "欢迎来到1000纸牌游戏，这是来自波兰共产主义时代的古老折磨"},
+    {"id": 29, "text": "希望你已经知道规则，否则你完蛋了，现在选择"},
+    {"id": 30, "text": "请输入你想扔掉的牌号（从0到 {max_index}），想好了吗？: "},
+    {"id": 31, "text": "错误选择，再试一次（从0到 {max_index}），你在干什么: "},
+    {"id": 32, "text": "你不能出 {color} 以外的花色，笨蛋。选择 {choices}: "},
+    {"id": 33, "text": "做出选择 1/0（1-我要加注，0-我认怂）: "},
+    {"id": 34, "text": "选错了，好好选（1/0），你识字吗: "},
+    {"id": 35, "text": "选择要送给可怜的 {opponent.name} 的牌号: "},
+    {"id": 36, "text": "发现保存的游戏！你想继续你未完成的悲剧吗？(t/n): "},
+    {"id": 37, "text": "机器人模式 - 0，人类互相折磨模式 - 1: "},
+    {"id": 38, "text": "选错了，选0-机器人模式，1-人类折磨模式，你在想什么: "},
+    {"id": 39, "text": "给自己起个名字，让大家记住你的失败"},
+    {"id": 40, "text": "选择语言（pl/en），中文还没准备好: "},
+    {"id": 41, "text": "宣布了婚姻 {color}，浪漫！"}
+  ]
+}

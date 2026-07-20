@@ -2,18 +2,24 @@ from models.bot import Bot
 from models.player import Player
 from models.deck import Deck
 from game.game import Game
-from utils.auxiliary import pick_game_mode, name_a_player, random_player_name
+from models.languagemanager import LanguageManager
+from utils.auxiliary import pick_game_mode, name_a_player, random_player_name, choose_language
 import os
 import pickle
 import sys
 
 # SAVE GAME 
 
+def _language_manager(game=None):
+    if game is not None and getattr(game, "lm", None) is not None:
+        return game.lm
+    return LanguageManager()
+
  
 def save_state(game_data, filename="savegame.pkl"):
         with open(filename,"wb") as f:
              pickle.dump(game_data,f)
-        print("Zapisano gre")
+        _language_manager(game_data).print_by_id(26)
 
 def load_state(filename="savegame.pkl"):
      if os.path.exists(filename):
@@ -24,12 +30,13 @@ def load_state(filename="savegame.pkl"):
 def main_save():
     state = load_state()
     game = None
+    lm = _language_manager(state)
 
     if state:
-        choice = input("Znaleziono zapisany stan gry! Czy chcesz kontynuować? (t/n): ")
+        choice = lm.input_by_id(36)
         if choice.lower() == 't':
             game = state
-            print("Wczytano grę!")
+            lm.print_by_id(27)
         else:
             game = setup_new_game()
     else:
@@ -43,17 +50,18 @@ def main_save():
 
 
 def setup_new_game():
-
-    if pick_game_mode():
-        Player1 = Player(random_player_name(),0)
-        Player2 = Player(random_player_name(),0) 
-        Player3 = Player(random_player_name(),0) 
+    lan = choose_language()
+    lm = LanguageManager(lan)
+    if pick_game_mode(lm):
+        Player1 = Player(random_player_name(),lm,0)
+        Player2 = Player(random_player_name(),lm,0) 
+        Player3 = Player(random_player_name(),lm,0) 
     else:
-        Player1 = Bot("czlowiek",0) 
-        Player2 = Bot("Claude",0)
-        Player3 = Bot("Gemini",0)
+        Player1 = Bot("czlowiek",lm,0) 
+        Player2 = Bot("Claude",lm,0)
+        Player3 = Bot("Gemini",lm,0)
 
-    gameplay = Game([Player1,Player2,Player3])
+    gameplay = Game([Player1,Player2,Player3],None,lm)
     gameplay.deck = Deck()
     gameplay.deck.create_deck()
     gameplay.starting_player.shuffle(gameplay.deck)
@@ -73,4 +81,4 @@ def main():
     run_game_loop(game)
 
 if __name__ == "__main__":
-    main_save()
+    main()

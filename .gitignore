@@ -1,9 +1,11 @@
 playground/
 updates/
-test/
-data/
 savegame.pkl
 .venv/
-**/__pycache__/
+
 # isolated __pycache__
-savegame.pkl
+**/__pycache__/
+.pytest_cache/
+test/test_MCTS.py
+*.rst
+fastest_wins.xlsx

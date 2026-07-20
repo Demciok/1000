@@ -1,0 +1,77 @@
+models package
+==============
+
+Submodules
+----------
+
+models.baseplayer module
+------------------------
+
+.. automodule:: models.baseplayer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.bot module
+-----------------
+
+.. automodule:: models.bot
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.card module
+------------------
+
+.. automodule:: models.card
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.deck module
+------------------
+
+.. automodule:: models.deck
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.excelLogger module
+-------------------------
+
+.. automodule:: models.excelLogger
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.languagemanager module
+-----------------------------
+
+.. automodule:: models.languagemanager
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.player module
+--------------------
+
+.. automodule:: models.player
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+models.turn module
+------------------
+
+.. automodule:: models.turn
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: models
+   :members:
+   :show-inheritance:
+   :undoc-members:

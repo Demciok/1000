@@ -40,16 +40,14 @@ class Deck():
         random.shuffle(self.deck)
 
     def deal_cards(self, game):
-        """Deal cards to each player and place remaining cards in the central pool."""
-        i = 7
-        for card in self.deck:
-            if len(game.players[0].hand) < i:
-                game.players[0].hand.append(card)
-            elif len(game.players[1].hand) < i:
-                game.players[1].hand.append(card)
-            elif len(game.players[2].hand) < i:
-                game.players[2].hand.append(card)
-            elif len(game.threecards) < 3:
-                game.threecards.append(card)
-            else:
-                continue
+        """Deal cards randomly to players and place 3 cards in the central pool."""
+        destinations = [player.hand for player in game.players for _ in range(7)]
+        destinations += [game.threecards] * 3
+
+        random.shuffle(destinations)
+
+        for card, hand in zip(self.deck, destinations):
+            hand.append(card)        
+
+
+

@@ -1,0 +1,51 @@
+{
+  "gra_id": "unique-game-id-123",
+  "timestart": "2026-05-23T15:00:00Z",
+  "tryb_gry": "boty", 
+  "gracze": [
+    {"id": 1, "imie": "Gracz 1"},
+    {"id": 2, "imie": "Bot A"},
+    {"id": 3, "imie": "Bot B"}
+  ],
+  "rozgrywka": [
+    {
+      "runda_nr": 1,
+      "stan_poczatkowy": {
+        "reki_graczy": {
+          "1": ["A-kier", "10-pik", "K-kier"],
+          "2": ["Q-kier", "J-kier", "10-kier"],
+          "3": ["9-trefl", "10-trefl", "K-trefl"]
+        },
+        "trzy_karty": ["A-pik", "Q-pik", "9-kier"]
+      },
+      "licytacja": {
+        "historia": [
+          {"gracz_id": 1, "bid": 100, "pas": false},
+          {"gracz_id": 2, "bid": 110, "pas": false},
+          {"gracz_id": 3, "bid": 0, "pas": true}
+        ],
+        "gracz_wygrany": {
+          "id": 2,
+          "bid_koncowy": 110,
+          "rozdanie_kart": {
+            "gracz_id": 1, "karty": ["A-pik"],
+            "gracz_id": 3, "karty": ["Q-pik"]
+          }
+        }
+      },
+      "tura": {
+        "zaczynajacy_ture": 2,
+        "kolor_meldunku": "kier",
+        "ruchy": [
+          {"gracz_id": 2, "karta": "A-kier"},
+          {"gracz_id": 3, "karta": "K-kier"},
+          {"gracz_id": 1, "karta": "J-kier"}
+        ]
+      },
+      "wyniki_rundy": {
+        "punkty": {"1": 20, "2": 90, "3": 0},
+        "kto_wzial_lewe": {"gracz_id": 2, "ile": 1}
+      }
+    }
+  ]
+}

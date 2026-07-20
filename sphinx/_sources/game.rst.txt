@@ -1,0 +1,21 @@
+game package
+============
+
+Submodules
+----------
+
+game.game module
+----------------
+
+.. automodule:: game.game
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: game
+   :members:
+   :show-inheritance:
+   :undoc-members:
